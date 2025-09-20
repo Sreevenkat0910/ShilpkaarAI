@@ -19,17 +19,23 @@ const PORT = process.env.PORT || 5001;
 // Security middleware
 app.use(helmet());
 
-// Rate limiting
+// Rate limiting - More lenient for development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 1000, // limit each IP to 1000 requests per windowMs (increased for development)
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
 
-// CORS configuration
+// CORS configuration - Enhanced for development
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
 
 // Body parsing middleware
