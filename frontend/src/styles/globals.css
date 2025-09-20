@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #e8efdd;
+  --foreground: #314f36;
+  --card: #f4f8ef;
+  --card-foreground: #314f36;
+  --popover: #f9fdf6;
+  --popover-foreground: #314f36;
+  --primary: #314f36;
+  --primary-foreground: #ffffff;
+  --secondary: #dde8c6;
+  --secondary-foreground: #233c27;
+  --muted: #f0f6e8;
+  --muted-foreground: #65796e;
+  --accent: #c8ddb0;
+  --accent-foreground: #233c27;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(49, 79, 54, 0.15);
+  --input: transparent;
+  --input-background: #f9fdf6;
+  --switch-background: #c8ddb0;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: rgba(49, 79, 54, 0.3);
+  --chart-1: #314f36;
+  --chart-2: #65796e;
+  --chart-3: #8aa876;
+  --chart-4: #a8c088;
+  --chart-5: #c8ddb0;
+  --radius: 0.75rem;
+  --sidebar: #f4f8ef;
+  --sidebar-foreground: #314f36;
+  --sidebar-primary: #314f36;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dde8c6;
+  --sidebar-accent-foreground: #233c27;
+  --sidebar-border: rgba(49, 79, 54, 0.15);
+  --sidebar-ring: rgba(49, 79, 54, 0.3);
+}
+
+.dark {
+  --background: #1a2920;
+  --foreground: #e8efdd;
+  --card: #233c27;
+  --card-foreground: #e8efdd;
+  --popover: #233c27;
+  --popover-foreground: #e8efdd;
+  --primary: #c8ddb0;
+  --primary-foreground: #233c27;
+  --secondary: #314f36;
+  --secondary-foreground: #e8efdd;
+  --muted: #2a3f2f;
+  --muted-foreground: #9cb3a1;
+  --accent: #314f36;
+  --accent-foreground: #e8efdd;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(200, 221, 176, 0.15);
+  --input: rgba(200, 221, 176, 0.1);
+  --ring: rgba(200, 221, 176, 0.3);
+  --chart-1: #c8ddb0;
+  --chart-2: #9cb3a1;
+  --chart-3: #8aa876;
+  --chart-4: #65796e;
+  --chart-5: #314f36;
+  --sidebar: #233c27;
+  --sidebar-foreground: #e8efdd;
+  --sidebar-primary: #c8ddb0;
+  --sidebar-primary-foreground: #233c27;
+  --sidebar-accent: #314f36;
+  --sidebar-accent-foreground: #e8efdd;
+  --sidebar-border: rgba(200, 221, 176, 0.15);
+  --sidebar-ring: rgba(200, 221, 176, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: var(--text-4xl);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: var(--text-3xl);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: var(--text-2xl);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.6;
+    }
+
+    label {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+
+    input {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+/* Enhanced card shadows for organic depth */
+@layer components {
+  .card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(49, 79, 54, 0.1), 
+                0 2px 4px -1px rgba(49, 79, 54, 0.06),
+                0 0 0 1px rgba(49, 79, 54, 0.05);
+  }
+  
+  .card-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(49, 79, 54, 0.1), 
+                0 4px 6px -2px rgba(49, 79, 54, 0.05),
+                0 0 0 1px rgba(49, 79, 54, 0.05);
+  }
+
+  .botanical-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23314f36' fill-opacity='0.03'%3E%3Cpath d='M30 30c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z'/%3E%3Cpath d='M20 20c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z'/%3E%3Cpath d='M40 40c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+html {
+  font-size: var(--font-size);
+  font-family: 'Inter', sans-serif;
+}
