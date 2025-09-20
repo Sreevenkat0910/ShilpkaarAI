@@ -83,7 +83,7 @@ export default function NavigationHeader() {
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold text-primary tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-                ShipkaarAI
+                ShilpkaarAI
               </h1>
               <p className="text-xs text-muted-foreground -mt-1">Artisan Marketplace</p>
             </div>
@@ -221,7 +221,7 @@ export default function NavigationHeader() {
                   </div>
                   <div>
                     <h2 className="font-bold text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
-                      ShipkaarAI
+                      ShilpkaarAI
                     </h2>
                     <p className="text-xs text-muted-foreground">Artisan Marketplace</p>
                   </div>

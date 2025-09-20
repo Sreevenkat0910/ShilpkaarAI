@@ -381,7 +381,7 @@ export default function ArtisansPage() {
           </p>
           <Button onClick={() => navigate('artisan-auth')} className="px-8">
             <Sparkles className="w-4 h-4 mr-2" />
-            Join ShipkaarAI
+            Join ShilpkaarAI
           </Button>
         </div>
       </div>

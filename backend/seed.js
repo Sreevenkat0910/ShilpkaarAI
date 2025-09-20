@@ -71,9 +71,35 @@ const sampleProducts = [
       'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBzYXJlZXMlMjB0ZXh0aWxlc3xlbnwxfHx8fDE3NTgzNjYyMTB8MA&ixlib=rb-4.1.0&q=80&w=400'
     ],
     category: 'Textiles',
-    stock: 5,
+    stock: 3,
     tags: ['silk', 'handwoven', 'traditional', 'zari'],
     materials: ['Pure Silk', 'Zari Thread', 'Gold Thread']
+  },
+  {
+    name: 'Cotton Handloom Kurta Set',
+    description: 'Comfortable cotton handloom kurta set with traditional block printing. Perfect for casual wear with authentic Indian craftsmanship.',
+    price: 1200,
+    originalPrice: 1500,
+    images: [
+      'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBjdXJ0YSUyMGhhbmRjcmFmdHxlbnwxfHx8fDE3NTgzNjYyMDh8MA&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Textiles',
+    stock: 8,
+    tags: ['cotton', 'handloom', 'kurta', 'block print'],
+    materials: ['Pure Cotton', 'Natural Dyes', 'Block Print']
+  },
+  {
+    name: 'Kashmiri Woolen Shawl',
+    description: 'Luxurious handwoven woolen shawl from Kashmir. Soft, warm, and beautifully crafted with traditional patterns.',
+    price: 3500,
+    originalPrice: 4500,
+    images: [
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBzaGF3bCUyMHdvb2x8ZW58MXx8fHwxNzU4MzY2MjE2fDA&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Textiles',
+    stock: 2,
+    tags: ['wool', 'shawl', 'kashmir', 'handwoven'],
+    materials: ['Pure Wool', 'Traditional Patterns', 'Natural Dyes']
   },
   {
     name: 'Blue Pottery Dinner Set',
@@ -157,18 +183,66 @@ const sampleProducts = [
     materials: ['Brass', 'Traditional Engravings', 'Natural Finish']
   },
   {
-    name: 'Handwoven Woolen Shawl',
-    description: 'Luxurious handwoven woolen shawl from Kashmir. Soft, warm, and beautifully crafted with traditional patterns.',
-    price: 3500,
-    originalPrice: 4500,
+    name: 'Traditional Brass Lamp',
+    description: 'Elegant brass decorative lamp with intricate engravings. Perfect for adding traditional Indian charm to any space.',
+    price: 2200,
     images: [
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBzaGF3bCUyMHdvb2x8ZW58MXx8fHwxNzU4MzY2MjE2fDA&ixlib=rb-4.1.0&q=80&w=400',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxrYXNobWlyJTIwc2hhd2x8ZW58MXx8fHwxNzU4MzY2MjE3fDA&ixlib=rb-4.1.0&q=80&w=400'
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBicmFzcyUyMGxhbXB8ZW58MXx8fHwxNzU4MzY2MjE0fDA&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Metalwork',
+    stock: 4,
+    tags: ['brass', 'lamp', 'decorative', 'traditional'],
+    materials: ['Brass', 'Traditional Engravings', 'Natural Finish']
+  },
+  {
+    name: 'Silver Filigree Necklace',
+    description: 'Delicate silver filigree necklace with intricate wirework. Handcrafted using traditional techniques with attention to detail.',
+    price: 1200,
+    originalPrice: 1500,
+    images: [
+      'https://images.unsplash.com/photo-1653227907864-560dce4c252d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBqZXdlbHJ5JTIwbWFraW5nJTIwY3JhZnRzfGVufDF8fHx8MTc1ODM2NjIwNXww&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Jewelry',
+    stock: 6,
+    tags: ['silver', 'filigree', 'necklace', 'handcrafted'],
+    materials: ['Sterling Silver', 'Traditional Wire']
+  },
+  {
+    name: 'Terracotta Plant Pot Set',
+    description: 'Set of three handcrafted terracotta plant pots with traditional designs. Perfect for indoor gardening.',
+    price: 800,
+    images: [
+      'https://images.unsplash.com/photo-1716876995651-1ff85b65a6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBoYW5kaWNyYWZ0cyUyMHBvdHRlcnklMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMHww&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Pottery',
+    stock: 12,
+    tags: ['terracotta', 'plant pots', 'traditional', 'handcrafted'],
+    materials: ['Clay', 'Natural Finish', 'Traditional Designs']
+  },
+  {
+    name: 'Handwoven Cotton Dupatta',
+    description: 'Beautiful handwoven cotton dupatta with traditional patterns. Lightweight and perfect for any occasion.',
+    price: 600,
+    originalPrice: 800,
+    images: [
+      'https://images.unsplash.com/photo-1632726733402-4a059a476028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB0ZXh0aWxlcyUyMHdlYXZpbmclMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMnww&ixlib=rb-4.1.0&q=80&w=400'
     ],
     category: 'Textiles',
-    stock: 2,
-    tags: ['wool', 'shawl', 'kashmir', 'handwoven'],
-    materials: ['Pure Wool', 'Traditional Patterns', 'Natural Dyes']
+    stock: 15,
+    tags: ['cotton', 'dupatta', 'handwoven', 'traditional'],
+    materials: ['Pure Cotton', 'Traditional Patterns', 'Natural Dyes']
+  },
+  {
+    name: 'Wooden Spice Box Set',
+    description: 'Traditional wooden spice box set with multiple compartments. Hand-carved from sustainable teak wood.',
+    price: 1500,
+    images: [
+      'https://images.unsplash.com/photo-1595126035905-21b5c2b67c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kd29ya2luZyUyMGluZGlhbiUyMGFydGlzYW58ZW58MXx8fHwxNzU4MzY2MjA3fDA&ixlib=rb-4.1.0&q=80&w=400'
+    ],
+    category: 'Woodwork',
+    stock: 7,
+    tags: ['wooden', 'spice box', 'hand carved', 'sustainable'],
+    materials: ['Teak Wood', 'Natural Finish', 'Traditional Carving']
   }
 ];
 
@@ -349,20 +423,23 @@ async function seedDatabase() {
       }
     }
 
-    // Create sample orders
+    // Create comprehensive historical orders spanning 6 months
     const sampleOrders = [
+      // Priya Sharma (Textile artisan) - Historical orders
       {
         customerIndex: 0, // Amit Singh
+        artisanIndex: 0, // Priya Sharma
         orders: [
+          // Recent orders (last 30 days)
           {
-            productIndices: [0, 2], // Handwoven Banarasi Silk Saree, Silver Filigree Earrings
-            quantities: [1, 1],
+            productIndices: [0], // Handwoven Banarasi Silk Saree
+            quantities: [1],
             status: 'delivered',
             paymentStatus: 'paid',
             paymentMethod: 'online',
-            trackingNumber: 'TRK123456789',
-            createdAt: new Date('2024-01-15'),
-            deliveredAt: new Date('2024-01-19'),
+            trackingNumber: 'TRK001',
+            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+            deliveredAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
             shippingAddress: {
               name: 'Amit Singh',
               mobile: '9876543213',
@@ -374,13 +451,33 @@ async function seedDatabase() {
             }
           },
           {
-            productIndices: [4], // Handwoven Cotton Kurta
+            productIndices: [3], // Cotton Handloom Kurta Set (belongs to Rajesh Kumar)
             quantities: [2],
             status: 'shipped',
             paymentStatus: 'paid',
             paymentMethod: 'cod',
-            trackingNumber: 'TRK987654321',
-            createdAt: new Date('2024-01-20'),
+            trackingNumber: 'TRK002',
+            createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          },
+          // Historical orders (last 6 months)
+          {
+            productIndices: [0, 3], // Silk Saree + Blue Pottery (both Priya Sharma)
+            quantities: [1, 1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK003',
+            createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
+            deliveredAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
             shippingAddress: {
               name: 'Amit Singh',
               mobile: '9876543213',
@@ -392,12 +489,194 @@ async function seedDatabase() {
             }
           },
           {
-            productIndices: [5], // Madhubani Painting
+            productIndices: [6], // Handwoven Cotton Kurta (Priya Sharma)
             quantities: [1],
-            status: 'confirmed',
+            status: 'delivered',
             paymentStatus: 'paid',
             paymentMethod: 'online',
-            createdAt: new Date('2024-01-22'),
+            trackingNumber: 'TRK004',
+            createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
+            deliveredAt: new Date(Date.now() - 55 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          },
+          {
+            productIndices: [0], // Silk Saree
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK005',
+            createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // 90 days ago
+            deliveredAt: new Date(Date.now() - 85 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          },
+          {
+            productIndices: [3, 6], // Blue Pottery + Cotton Kurta (both Priya Sharma)
+            quantities: [1, 1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK006',
+            createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000), // 120 days ago
+            deliveredAt: new Date(Date.now() - 115 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          },
+          {
+            productIndices: [0], // Silk Saree
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK007',
+            createdAt: new Date(Date.now() - 150 * 24 * 60 * 60 * 1000), // 150 days ago
+            deliveredAt: new Date(Date.now() - 145 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          }
+        ]
+      },
+      // Sneha Reddy orders - Rajesh Kumar (Pottery artisan)
+      {
+        customerIndex: 1, // Sneha Reddy
+        artisanIndex: 1, // Rajesh Kumar
+        orders: [
+          {
+            productIndices: [1], // Cotton Handloom Kurta Set (Rajesh Kumar)
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK008',
+            createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000), // 8 days ago
+            deliveredAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Sneha Reddy',
+              mobile: '9876543214',
+              address: '456 Brigade Road, Koramangala',
+              city: 'Bangalore',
+              state: 'Karnataka',
+              pincode: '560034',
+              country: 'India'
+            }
+          }
+        ]
+      },
+      // Sneha Reddy orders - Meera Patel (Jewelry artisan)
+      {
+        customerIndex: 1, // Sneha Reddy
+        artisanIndex: 2, // Meera Patel
+        orders: [
+          {
+            productIndices: [2], // Kashmiri Woolen Shawl (Meera Patel)
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK009',
+            createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000), // 25 days ago
+            deliveredAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Sneha Reddy',
+              mobile: '9876543214',
+              address: '456 Brigade Road, Koramangala',
+              city: 'Bangalore',
+              state: 'Karnataka',
+              pincode: '560034',
+              country: 'India'
+            }
+          }
+        ]
+      },
+      // Sneha Reddy orders - Priya Sharma (Textile artisan)
+      {
+        customerIndex: 1, // Sneha Reddy
+        artisanIndex: 0, // Priya Sharma
+        orders: [
+          {
+            productIndices: [0], // Silk Saree (Priya Sharma)
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK010',
+            createdAt: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000), // 75 days ago
+            deliveredAt: new Date(Date.now() - 70 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Sneha Reddy',
+              mobile: '9876543214',
+              address: '456 Brigade Road, Koramangala',
+              city: 'Bangalore',
+              state: 'Karnataka',
+              pincode: '560034',
+              country: 'India'
+            }
+          }
+        ]
+      },
+      // Additional customers for more data
+      {
+        customerIndex: 0, // Amit Singh - Rajesh Kumar (Pottery artisan) orders
+        artisanIndex: 1, // Rajesh Kumar
+        orders: [
+          {
+            productIndices: [1], // Cotton Handloom Kurta Set (Rajesh Kumar)
+            quantities: [1],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK011',
+            createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+            deliveredAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+            shippingAddress: {
+              name: 'Amit Singh',
+              mobile: '9876543213',
+              address: '123 MG Road, Bandra West',
+              city: 'Mumbai',
+              state: 'Maharashtra',
+              pincode: '400050',
+              country: 'India'
+            }
+          },
+          {
+            productIndices: [4], // Silver Filigree Earrings (Rajesh Kumar)
+            quantities: [2],
+            status: 'delivered',
+            paymentStatus: 'paid',
+            paymentMethod: 'online',
+            trackingNumber: 'TRK012',
+            createdAt: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000), // 35 days ago
+            deliveredAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
             shippingAddress: {
               name: 'Amit Singh',
               mobile: '9876543213',
@@ -411,17 +690,18 @@ async function seedDatabase() {
         ]
       },
       {
-        customerIndex: 1, // Sneha Reddy
+        customerIndex: 1, // Sneha Reddy - Rajesh Kumar (Pottery artisan) orders
+        artisanIndex: 1, // Rajesh Kumar
         orders: [
           {
-            productIndices: [1, 3], // Blue Pottery Dinner Set, Wooden Hand Carved Bowl Set
-            quantities: [1, 1],
+            productIndices: [10], // Silver Filigree Necklace (Rajesh Kumar)
+            quantities: [1],
             status: 'delivered',
             paymentStatus: 'paid',
             paymentMethod: 'online',
-            trackingNumber: 'TRK456789123',
-            createdAt: new Date('2024-01-10'),
-            deliveredAt: new Date('2024-01-14'),
+            trackingNumber: 'TRK013',
+            createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+            deliveredAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
             shippingAddress: {
               name: 'Sneha Reddy',
               mobile: '9876543214',
@@ -433,12 +713,14 @@ async function seedDatabase() {
             }
           },
           {
-            productIndices: [2], // Silver Filigree Earrings
+            productIndices: [10], // Silver Necklace
             quantities: [1],
-            status: 'cancelled',
-            paymentStatus: 'refunded',
+            status: 'delivered',
+            paymentStatus: 'paid',
             paymentMethod: 'online',
-            createdAt: new Date('2024-01-18'),
+            trackingNumber: 'TRK014',
+            createdAt: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000), // 50 days ago
+            deliveredAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
             shippingAddress: {
               name: 'Sneha Reddy',
               mobile: '9876543214',
@@ -455,9 +737,10 @@ async function seedDatabase() {
 
     for (const customerOrderData of sampleOrders) {
       const customer = customers[customerOrderData.customerIndex];
+      const artisan = artisans[customerOrderData.artisanIndex];
       
-      if (!customer) {
-        console.log(`⚠️ Customer at index ${customerOrderData.customerIndex} not found, skipping orders`);
+      if (!customer || !artisan) {
+        console.log(`⚠️ Customer or artisan not found, skipping orders`);
         continue;
       }
       
@@ -472,6 +755,12 @@ async function seedDatabase() {
           
           if (!product) {
             console.log(`⚠️ Product at index ${productIndex} not found, skipping order item`);
+            continue;
+          }
+          
+          // Only include products from the correct artisan
+          if (product.artisan.toString() !== artisan._id.toString()) {
+            console.log(`⚠️ Product ${product.name} doesn't belong to artisan ${artisan.name}, skipping`);
             continue;
           }
           
@@ -491,7 +780,7 @@ async function seedDatabase() {
         }
         
         const order = new Order({
-          orderNumber: `SPK${String(Date.now()).slice(-6)}`, // Generate unique order number
+          orderNumber: `SPK${String(Date.now() + Math.random() * 1000).slice(-6)}`, // Generate unique order number
           customer: customer._id,
           items: orderItems,
           totalAmount: totalAmount,
@@ -505,7 +794,7 @@ async function seedDatabase() {
         });
         
         await order.save();
-        console.log(`📦 Created order ${order.orderNumber}: ${customer.name} - ₹${totalAmount} (${orderData.status})`);
+        console.log(`📦 Created order ${order.orderNumber}: ${customer.name} → ${artisan.name} - ₹${totalAmount} (${orderData.status})`);
       }
     }
 

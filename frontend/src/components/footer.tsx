@@ -18,7 +18,7 @@ export default function Footer() {
     {
       title: 'For Artisans',
       links: [
-        'Join ShipkaarAI',
+        'Join ShilpkaarAI',
         'AI Tools',
         'Seller Dashboard',
         'Photo Enhancement',
@@ -85,7 +85,7 @@ export default function Footer() {
                   </div>
                 </div>
                 <span className="font-bold text-xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  ShipkaarAI
+                  ShilpkaarAI
                 </span>
               </div>
               <p className="text-muted-foreground mb-6 max-w-sm">
@@ -105,7 +105,7 @@ export default function Footer() {
                 </div>
                 <div className="flex items-center space-x-2 text-muted-foreground">
                   <Mail className="h-4 w-4" />
-                  <span>hello@shipkaarai.com</span>
+                  <span>hello@shilpkaarai.com</span>
                 </div>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function Footer() {
         {/* Bottom Footer */}
         <div className="py-6 flex flex-col md:flex-row justify-between items-center">
           <div className="text-sm text-muted-foreground mb-4 md:mb-0">
-            © 2024 ShipkaarAI. All rights reserved. Built with ❤️ for Indian artisans.
+            © 2024 ShilpkaarAI. All rights reserved. Built with ❤️ for Indian artisans.
           </div>
           
           {/* Social Links */}

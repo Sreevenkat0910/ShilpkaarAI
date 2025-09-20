@@ -118,7 +118,7 @@ export default function ArtisanAuth() {
             </div>
             <div>
               <h1 className="font-bold text-primary tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-                ShipkaarAI
+                ShilpkaarAI
               </h1>
               <p className="text-xs text-muted-foreground -mt-1">Artisan Portal</p>
             </div>

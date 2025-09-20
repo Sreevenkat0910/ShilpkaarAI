@@ -18,6 +18,7 @@ type Page =
   | 'artisan-dashboard'
   | 'artisan-products'
   | 'add-product'
+  | 'edit-product'
   | 'artisan-ai-tools'
   | 'artisan-analytics'
   | 'artisan-profile'

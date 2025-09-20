@@ -272,7 +272,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="mt-6 p-4 bg-secondary/20 rounded-lg">
-                    <h4 className="font-medium text-sm mb-2">Why ShipkaarAI?</h4>
+                    <h4 className="font-medium text-sm mb-2">Why ShilpkaarAI?</h4>
                     <ul className="text-xs text-muted-foreground space-y-1">
                       <li>• Authentic handcrafted products</li>
                       <li>• Direct support to artisan communities</li>

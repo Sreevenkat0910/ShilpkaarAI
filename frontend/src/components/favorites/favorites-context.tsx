@@ -133,9 +133,11 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
     }
 
     try {
+      console.log('API: Removing from favorites:', productId)
       setError(null)
       
       await favoritesApi.removeFromFavorites(productId)
+      console.log('API: Successfully removed from favorites:', productId)
       
       // Remove from local state
       setFavorites(prev => prev.filter(fav => fav.product._id !== productId))
@@ -146,7 +148,7 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
       })
       
     } catch (err) {
-      console.error('Error removing from favorites:', err)
+      console.error('API: Error removing from favorites:', err)
       if (err instanceof ApiError) {
         if (err.status === 404) {
           setError('Product not found in favorites')

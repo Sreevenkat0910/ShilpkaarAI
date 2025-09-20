@@ -19,6 +19,7 @@ import ArtisanProducts from './components/artisan/artisan-products'
 import ArtisanAnalytics from './components/artisan/artisan-analytics'
 import ArtisanAITools from './components/artisan/artisan-ai-tools'
 import AddProduct from './components/artisan/add-product'
+import EditProduct from './components/artisan/edit-product'
 import OrdersPage from './components/customer/orders-page'
 import FavoritesPage from './components/customer/favorites-page'
 import OrderTracking from './components/customer/order-tracking'
@@ -153,6 +154,12 @@ function AppContent() {
         return (
           <RoleGuard allowedRoles={['artisan']}>
             <AddProduct />
+          </RoleGuard>
+        )
+      case 'edit-product':
+        return (
+          <RoleGuard allowedRoles={['artisan']}>
+            <EditProduct />
           </RoleGuard>
         )
       case 'artisan-analytics':

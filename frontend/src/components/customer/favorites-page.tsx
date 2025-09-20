@@ -75,8 +75,10 @@ export default function FavoritesPage() {
 
   const removeFavorite = async (productId: string) => {
     try {
+      console.log('Removing favorite:', productId)
       setRemovingId(productId)
       await removeFromFavorites(productId)
+      console.log('Successfully removed favorite:', productId)
     } catch (error) {
       console.error('Error removing favorite:', error)
     } finally {
@@ -130,8 +132,11 @@ export default function FavoritesPage() {
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-2 right-2 bg-white/90 hover:bg-white text-red-500 hover:text-red-600"
-              onClick={() => removeFavorite(item._id)}
+              className="absolute top-2 right-2 bg-white/90 hover:bg-white text-red-500 hover:text-red-600 z-10"
+              onClick={(e) => {
+                e.stopPropagation()
+                removeFavorite(item._id)
+              }}
               disabled={removingId === item._id}
             >
               {removingId === item._id ? (

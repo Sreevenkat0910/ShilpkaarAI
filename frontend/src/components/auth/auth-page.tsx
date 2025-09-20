@@ -105,7 +105,7 @@ export default function AuthPage() {
             </div>
             <div>
               <h1 className="font-bold text-primary tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-                ShipkaarAI
+                ShilpkaarAI
               </h1>
               <p className="text-xs text-muted-foreground -mt-1">Artisan Marketplace</p>
             </div>
@@ -115,7 +115,7 @@ export default function AuthPage() {
         <Card className="border-0 bg-card/80 backdrop-blur-md card-shadow-lg">
           <CardHeader className="text-center space-y-4">
             <CardTitle className="text-2xl" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Welcome to ShipkaarAI
+              Welcome to ShilpkaarAI
             </CardTitle>
             <CardDescription className="text-base leading-relaxed">
               Discover authentic handcrafted treasures from skilled Indian artisans, 
@@ -276,7 +276,7 @@ export default function AuthPage() {
                   className="p-0 h-auto text-primary hover:text-primary/80 font-medium"
                   onClick={() => navigate('artisan-auth')}
                 >
-                  Join ShipkaarAI
+                  Join ShilpkaarAI
                 </Button>
               </p>
             </div>

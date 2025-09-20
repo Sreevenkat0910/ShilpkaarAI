@@ -96,7 +96,7 @@ export default function SupportPage() {
       faqs: [
         {
           question: 'Are all products handmade?',
-          answer: 'Yes, all products on ShipkaarAI are handcrafted by verified artisans. Each item comes with an authenticity certificate.'
+          answer: 'Yes, all products on ShilpkaarAI are handcrafted by verified artisans. Each item comes with an authenticity certificate.'
         },
         {
           question: 'Can I request customization?',
@@ -213,7 +213,7 @@ export default function SupportPage() {
               Help & Support
             </h1>
             <p className="text-muted-foreground">
-              Get help with your ShipkaarAI experience
+              Get help with your ShilpkaarAI experience
             </p>
           </div>
         </div>
@@ -543,7 +543,7 @@ export default function SupportPage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">support@shipkaarai.com</span>
+                  <span className="text-sm">support@shilpkaarai.com</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Clock className="h-4 w-4 text-muted-foreground" />

@@ -5,6 +5,13 @@ import { Input } from '../ui/input'
 import { Badge } from '../ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu'
+import { 
   Plus, 
   Search, 
   Filter,
@@ -22,7 +29,12 @@ import {
   Clock,
   DollarSign,
   Camera,
-  Sparkles
+  Sparkles,
+  Copy,
+  Share2,
+  Archive,
+  RefreshCw,
+  Settings
 } from 'lucide-react'
 import { useRouter } from '../router'
 import { useAuth } from '../auth/auth-context'
@@ -35,6 +47,64 @@ export default function ArtisanProducts() {
   const { user } = useAuth()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('all')
+  const [deletingProduct, setDeletingProduct] = useState<string | null>(null)
+
+  // Handler functions for product actions
+  const handleEditProduct = (productId: string) => {
+    navigate('edit-product', { id: productId })
+  }
+
+  const handleViewProduct = (productId: string) => {
+    navigate('product-detail', { id: productId })
+  }
+
+  const handleDuplicateProduct = (productId: string) => {
+    // TODO: Implement duplicate functionality
+    console.log('Duplicate product:', productId)
+    // For now, just show a message
+    alert('Duplicate functionality will be implemented soon!')
+  }
+
+  const handleShareProduct = (productId: string) => {
+    // TODO: Implement share functionality
+    console.log('Share product:', productId)
+    // For now, copy product URL to clipboard
+    const productUrl = `${window.location.origin}/product/${productId}`
+    navigator.clipboard.writeText(productUrl)
+    alert('Product link copied to clipboard!')
+  }
+
+  const handleArchiveProduct = (productId: string) => {
+    // TODO: Implement archive functionality
+    console.log('Archive product:', productId)
+    alert('Archive functionality will be implemented soon!')
+  }
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+      return
+    }
+    
+    setDeletingProduct(productId)
+    try {
+      // TODO: Implement actual delete API call
+      console.log('Delete product:', productId)
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      alert('Product deleted successfully!')
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      alert('Failed to delete product. Please try again.')
+    } finally {
+      setDeletingProduct(null)
+    }
+  }
+
+  const handleRefreshProduct = (productId: string) => {
+    // TODO: Implement refresh functionality (re-sync with marketplace)
+    console.log('Refresh product:', productId)
+    alert('Refresh functionality will be implemented soon!')
+  }
 
   // Mock products data
   const products = [
@@ -344,13 +414,57 @@ export default function ArtisanProducts() {
                               </Badge>
                             </div>
                             <div className="absolute top-3 right-3">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="bg-white/90 backdrop-blur-sm border-white/20 hover:bg-white"
-                              >
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="bg-white/90 backdrop-blur-sm border-white/20 hover:bg-white"
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                  <DropdownMenuItem onClick={() => handleViewProduct(product.id)}>
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    View Details
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleEditProduct(product.id)}>
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    Edit Product
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product.id)}>
+                                    <Copy className="h-4 w-4 mr-2" />
+                                    Duplicate
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleShareProduct(product.id)}>
+                                    <Share2 className="h-4 w-4 mr-2" />
+                                    Share Product
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleRefreshProduct(product.id)}>
+                                    <RefreshCw className="h-4 w-4 mr-2" />
+                                    Refresh
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleArchiveProduct(product.id)}>
+                                    <Archive className="h-4 w-4 mr-2" />
+                                    Archive
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem 
+                                    onClick={() => handleDeleteProduct(product.id)}
+                                    className="text-red-600 focus:text-red-600"
+                                    disabled={deletingProduct === product.id}
+                                  >
+                                    {deletingProduct === product.id ? (
+                                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                    ) : (
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                    )}
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
                           </div>
 
