@@ -33,6 +33,7 @@ import { useAuth } from '../auth/auth-context'
 import NavigationHeader from '../navigation-header'
 import Footer from '../footer'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { apiCall, ApiError } from '../../utils/api'
 
 interface ProductImage {
   id: string
@@ -121,36 +122,40 @@ export default function EditProduct() {
     const loadProduct = async () => {
       setIsLoading(true)
       try {
-        // In real app, fetch product data from API using router.params.id
-        const productId = router.params.id || '1'
+        const productId = router.params.id
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        if (!productId) {
+          throw new Error('Product ID is required')
+        }
+        
+        // Fetch product data from API
+        const response = await apiCall(`/products/one?id=${productId}`)
+        const product = response.data.productData
         
         // Set product data
         setProductData({
-          name: mockProduct.name,
-          description: mockProduct.description,
-          price: mockProduct.price.toString(),
-          originalPrice: mockProduct.originalPrice.toString(),
-          category: mockProduct.category,
-          subcategory: mockProduct.subcategory,
-          materials: mockProduct.materials,
-          dimensions: mockProduct.dimensions,
-          weight: mockProduct.weight,
-          stock: mockProduct.stock.toString(),
-          sku: mockProduct.sku,
-          tags: mockProduct.tags,
-          customization: mockProduct.customization,
-          customizationDetails: mockProduct.customizationDetails,
-          shippingWeight: mockProduct.shippingWeight,
-          shippingDimensions: mockProduct.shippingDimensions,
-          craftStory: mockProduct.craftStory,
-          careInstructions: mockProduct.careInstructions
+          name: product.name,
+          description: product.description,
+          price: product.price.toString(),
+          originalPrice: product.originalPrice?.toString() || '',
+          category: product.category,
+          subcategory: product.subcategory || '',
+          materials: product.materials?.join(', ') || '',
+          dimensions: product.dimensions || '',
+          weight: product.weight?.toString() || '',
+          stock: product.stock?.toString() || '0',
+          sku: product.sku || '',
+          tags: product.tags?.join(', ') || '',
+          customization: product.customization || false,
+          customizationDetails: product.customizationDetails || '',
+          shippingWeight: product.shippingWeight || '',
+          shippingDimensions: product.shippingDimensions || '',
+          craftStory: product.craftStory || '',
+          careInstructions: product.careInstructions || ''
         })
 
         // Set existing images
-        const existingImages: ProductImage[] = mockProduct.images.map((url, index) => ({
+        const existingImages: ProductImage[] = product.images.map((url: string, index: number) => ({
           id: `existing-${index}`,
           preview: url,
           isEnhanced: false,
@@ -210,9 +215,41 @@ export default function EditProduct() {
   const handleSave = async () => {
     setIsProcessing(true)
     try {
-      // TODO: Implement actual save API call
-      console.log('Saving product:', productData)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const productId = router.params.id
+      
+      if (!productId) {
+        throw new Error('Product ID is required')
+      }
+
+      // Prepare data for API
+      const updateData = {
+        name: productData.name,
+        description: productData.description,
+        price: parseFloat(productData.price),
+        originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
+        category: productData.category,
+        subcategory: productData.subcategory,
+        materials: productData.materials ? productData.materials.split(',').map(m => m.trim()) : [],
+        dimensions: productData.dimensions,
+        weight: productData.weight ? parseFloat(productData.weight) : undefined,
+        stock: parseInt(productData.stock),
+        sku: productData.sku,
+        tags: productData.tags ? productData.tags.split(',').map(t => t.trim()) : [],
+        customization: productData.customization,
+        customizationDetails: productData.customizationDetails,
+        shippingWeight: productData.shippingWeight,
+        shippingDimensions: productData.shippingDimensions,
+        craftStory: productData.craftStory,
+        careInstructions: productData.careInstructions,
+        // Keep existing images for now (in real app, you'd handle image uploads)
+        images: images.map(img => img.preview)
+      }
+
+      await apiCall(`/products/${productId}`, {
+        method: 'PUT',
+        body: JSON.stringify(updateData)
+      })
+      
       alert('Product updated successfully!')
       navigate('artisan-products')
     } catch (error) {
@@ -226,9 +263,41 @@ export default function EditProduct() {
   const handlePublish = async () => {
     setIsProcessing(true)
     try {
-      // TODO: Implement actual publish API call
-      console.log('Publishing product:', productData)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const productId = router.params.id
+      
+      if (!productId) {
+        throw new Error('Product ID is required')
+      }
+
+      // Prepare data for API
+      const updateData = {
+        name: productData.name,
+        description: productData.description,
+        price: parseFloat(productData.price),
+        originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
+        category: productData.category,
+        subcategory: productData.subcategory,
+        materials: productData.materials ? productData.materials.split(',').map(m => m.trim()) : [],
+        dimensions: productData.dimensions,
+        weight: productData.weight ? parseFloat(productData.weight) : undefined,
+        stock: parseInt(productData.stock),
+        sku: productData.sku,
+        tags: productData.tags ? productData.tags.split(',').map(t => t.trim()) : [],
+        customization: productData.customization,
+        customizationDetails: productData.customizationDetails,
+        shippingWeight: productData.shippingWeight,
+        shippingDimensions: productData.shippingDimensions,
+        craftStory: productData.craftStory,
+        careInstructions: productData.careInstructions,
+        isActive: true, // Publish the product
+        images: images.map(img => img.preview)
+      }
+
+      await apiCall(`/products/${productId}`, {
+        method: 'PUT',
+        body: JSON.stringify(updateData)
+      })
+      
       alert('Product published successfully!')
       navigate('artisan-products')
     } catch (error) {

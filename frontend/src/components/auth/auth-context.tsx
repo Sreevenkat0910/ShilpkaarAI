@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import axios from 'axios'
+import { apiCall, ApiError } from '../../utils/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
 
@@ -51,13 +51,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = localStorage.getItem('accessToken')
       if (token) {
         try {
-          const response = await axios.get(`${API_URL}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
+          const response = await apiCall('/auth/me')
           setUser(response.data.user)
         } catch (error: any) {
           // Only log error if it's not a 401 (unauthorized) which is expected for invalid tokens
-          if (error.response?.status !== 401) {
+          if (error.status !== 401) {
             console.error('Auth check failed:', error)
           }
           localStorage.removeItem('accessToken')
@@ -74,9 +72,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true)
     
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        mobile,
-        password
+      const response = await apiCall('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ mobile, password })
       })
       
       const { accessToken, role, user: userData } = response.data
@@ -87,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(userData)
     } catch (error: any) {
       console.error('Login error:', error)
-      throw new Error(error.response?.data?.message || 'Login failed')
+      throw new Error(error.message || 'Login failed')
     } finally {
       setIsLoading(false)
     }

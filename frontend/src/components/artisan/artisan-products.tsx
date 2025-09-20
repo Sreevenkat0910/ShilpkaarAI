@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Input } from '../ui/input'
@@ -41,6 +41,7 @@ import { useAuth } from '../auth/auth-context'
 import NavigationHeader from '../navigation-header'
 import Footer from '../footer'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { apiCall, ApiError } from '../../utils/api'
 
 export default function ArtisanProducts() {
   const { navigate } = useRouter()
@@ -48,6 +49,37 @@ export default function ArtisanProducts() {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('all')
   const [deletingProduct, setDeletingProduct] = useState<string | null>(null)
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      // Fetch all products and filter by current artisan
+      const response = await apiCall('/products/all')
+      const allProducts = response.data.productsData
+      
+      // Filter products for current artisan
+      const artisanProducts = allProducts.filter((product: any) => 
+        product.artisan._id === user?.id
+      )
+      
+      setProducts(artisanProducts)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      setError('Failed to load products')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Handler functions for product actions
   const handleEditProduct = (productId: string) => {
@@ -87,10 +119,12 @@ export default function ArtisanProducts() {
     
     setDeletingProduct(productId)
     try {
-      // TODO: Implement actual delete API call
-      console.log('Delete product:', productId)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await apiCall(`/products/${productId}`, {
+        method: 'DELETE'
+      })
+      
+      // Remove product from local state
+      setProducts(prev => prev.filter(p => p._id !== productId))
       alert('Product deleted successfully!')
     } catch (error) {
       console.error('Error deleting product:', error)
@@ -106,90 +140,6 @@ export default function ArtisanProducts() {
     alert('Refresh functionality will be implemented soon!')
   }
 
-  // Mock products data
-  const products = [
-    {
-      id: '1',
-      name: 'Handwoven Banarasi Silk Saree',
-      description: 'Traditional gold zari work on pure silk with intricate floral patterns',
-      price: 12500,
-      originalPrice: 15000,
-      category: 'Textiles',
-      status: 'active',
-      stock: 3,
-      views: 1204,
-      likes: 89,
-      orders: 7,
-      rating: 4.8,
-      reviews: 15,
-      images: [
-        'https://images.unsplash.com/photo-1632726733402-4a059a476028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB0ZXh0aWxlcyUyMHdlYXZpbmclMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMnww&ixlib=rb-4.1.0&q=80&w=300'
-      ],
-      createdAt: '2024-01-10',
-      lastUpdated: '2024-01-15'
-    },
-    {
-      id: '2',
-      name: 'Traditional Copper Water Vessel',
-      description: 'Handcrafted pure copper kalash with traditional engravings',
-      price: 2850,
-      originalPrice: 3200,
-      category: 'Metalwork',
-      status: 'draft',
-      stock: 5,
-      views: 456,
-      likes: 23,
-      orders: 2,
-      rating: 4.5,
-      reviews: 8,
-      images: [
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBtZXRhbHdvcmslMjBjb3BwZXJ8ZW58MXx8fHwxNzU4MzY2MjEwfDA&ixlib=rb-4.1.0&q=80&w=300'
-      ],
-      createdAt: '2024-01-12',
-      lastUpdated: '2024-01-14'
-    },
-    {
-      id: '3',
-      name: 'Embroidered Silk Cushion Cover',
-      description: 'Hand-embroidered silk cushion cover with mirror work and beads',
-      price: 1200,
-      originalPrice: 1500,
-      category: 'Home Decor',
-      status: 'active',
-      stock: 12,
-      views: 789,
-      likes: 45,
-      orders: 18,
-      rating: 4.9,
-      reviews: 22,
-      images: [
-        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbWJyb2lkZXJ5JTIwaW5kaWFuJTIwdGV4dGlsZXN8ZW58MXx8fHwxNzU4MzY2MjEyfDA&ixlib=rb-4.1.0&q=80&w=300'
-      ],
-      createdAt: '2024-01-08',
-      lastUpdated: '2024-01-13'
-    },
-    {
-      id: '4',
-      name: 'Wooden Carved Jewelry Box',
-      description: 'Intricately carved wooden jewelry box with traditional motifs',
-      price: 3500,
-      originalPrice: 4000,
-      category: 'Woodwork',
-      status: 'out_of_stock',
-      stock: 0,
-      views: 234,
-      likes: 12,
-      orders: 3,
-      rating: 4.6,
-      reviews: 5,
-      images: [
-        'https://images.unsplash.com/photo-1595126035905-21b5c2b67c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kd29ya2luZyUyMGluZGlhbiUyMGFydGlzYW58ZW58MXx8fHwxNzU4MzY2MjA3fDA&ixlib=rb-4.1.0&q=80&w=300'
-      ],
-      createdAt: '2024-01-05',
-      lastUpdated: '2024-01-11'
-    }
-  ]
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'active':
@@ -199,7 +149,7 @@ export default function ArtisanProducts() {
       case 'out_of_stock':
         return <AlertCircle className="h-4 w-4 text-red-600" />
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />
+        return <CheckCircle className="h-4 w-4 text-green-600" />
     }
   }
 
@@ -212,7 +162,7 @@ export default function ArtisanProducts() {
       case 'out_of_stock':
         return 'bg-red-100 text-red-700'
       default:
-        return 'bg-gray-100 text-gray-700'
+        return 'bg-green-100 text-green-700'
     }
   }
 
@@ -228,12 +178,49 @@ export default function ArtisanProducts() {
 
   const stats = {
     total: products.length,
-    active: products.filter(p => p.status === 'active').length,
-    draft: products.filter(p => p.status === 'draft').length,
-    outOfStock: products.filter(p => p.status === 'out_of_stock').length,
-    totalViews: products.reduce((sum, p) => sum + p.views, 0),
-    totalOrders: products.reduce((sum, p) => sum + p.orders, 0),
-    totalRevenue: products.reduce((sum, p) => sum + (p.price * p.orders), 0)
+    active: products.filter(p => p.isActive !== false).length,
+    draft: products.filter(p => p.isActive === false).length,
+    outOfStock: products.filter(p => p.stock === 0).length,
+    totalViews: products.reduce((sum, p) => sum + (p.views || 0), 0),
+    totalOrders: products.reduce((sum, p) => sum + (p.orders || 0), 0),
+    totalRevenue: products.reduce((sum, p) => sum + (p.price * (p.orders || 0)), 0)
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-accent/30 botanical-pattern">
+        <NavigationHeader />
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+              <p className="text-muted-foreground">Loading products...</p>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-accent/30 botanical-pattern">
+        <NavigationHeader />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center py-16">
+            <div className="text-red-500 mb-4">❌</div>
+            <h2 className="text-2xl font-bold mb-2">Error Loading Products</h2>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={fetchProducts}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Try Again
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
   }
 
   return (
@@ -393,7 +380,7 @@ export default function ArtisanProducts() {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((product) => (
                       <Card 
-                        key={product.id}
+                        key={product._id}
                         className="group border-0 bg-card/40 backdrop-blur-sm card-shadow hover:card-shadow-lg transition-all duration-300"
                       >
                         <CardContent className="p-4">
@@ -404,11 +391,11 @@ export default function ArtisanProducts() {
                               className="w-full h-48 object-cover rounded-lg"
                             />
                             <div className="absolute top-3 left-3">
-                              <Badge className={`${getStatusColor(product.status)} border-0`}>
+                              <Badge className={`${getStatusColor(product.isActive !== false ? 'active' : 'draft')} border-0`}>
                                 <div className="flex items-center">
-                                  {getStatusIcon(product.status)}
+                                  {getStatusIcon(product.isActive !== false ? 'active' : 'draft')}
                                   <span className="ml-1 capitalize">
-                                    {product.status.replace('_', ' ')}
+                                    {product.isActive !== false ? 'Active' : 'Draft'}
                                   </span>
                                 </div>
                               </Badge>
@@ -425,38 +412,38 @@ export default function ArtisanProducts() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-48">
-                                  <DropdownMenuItem onClick={() => handleViewProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleViewProduct(product._id)}>
                                     <Eye className="h-4 w-4 mr-2" />
                                     View Details
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleEditProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleEditProduct(product._id)}>
                                     <Edit className="h-4 w-4 mr-2" />
                                     Edit Product
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product._id)}>
                                     <Copy className="h-4 w-4 mr-2" />
                                     Duplicate
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => handleShareProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleShareProduct(product._id)}>
                                     <Share2 className="h-4 w-4 mr-2" />
                                     Share Product
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleRefreshProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleRefreshProduct(product._id)}>
                                     <RefreshCw className="h-4 w-4 mr-2" />
                                     Refresh
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => handleArchiveProduct(product.id)}>
+                                  <DropdownMenuItem onClick={() => handleArchiveProduct(product._id)}>
                                     <Archive className="h-4 w-4 mr-2" />
                                     Archive
                                   </DropdownMenuItem>
                                   <DropdownMenuItem 
-                                    onClick={() => handleDeleteProduct(product.id)}
+                                    onClick={() => handleDeleteProduct(product._id)}
                                     className="text-red-600 focus:text-red-600"
-                                    disabled={deletingProduct === product.id}
+                                    disabled={deletingProduct === product._id}
                                   >
-                                    {deletingProduct === product.id ? (
+                                    {deletingProduct === product._id ? (
                                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                                     ) : (
                                       <Trash2 className="h-4 w-4 mr-2" />
@@ -484,14 +471,14 @@ export default function ArtisanProducts() {
                                   <span className="text-lg font-semibold text-primary">
                                     ₹{product.price.toLocaleString()}
                                   </span>
-                                  {product.originalPrice > product.price && (
+                                  {product.originalPrice && product.originalPrice > product.price && (
                                     <span className="text-sm text-muted-foreground line-through">
                                       ₹{product.originalPrice.toLocaleString()}
                                     </span>
                                   )}
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                  Stock: {product.stock} units
+                                  Stock: {product.stock || 0} units
                                 </p>
                               </div>
                               <Badge variant="outline" className="border-primary/20">
@@ -502,24 +489,24 @@ export default function ArtisanProducts() {
                             <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
                               <div className="flex items-center">
                                 <Eye className="h-3 w-3 mr-1" />
-                                <span>{product.views}</span>
+                                <span>{product.views || 0}</span>
                               </div>
                               <div className="flex items-center">
                                 <Heart className="h-3 w-3 mr-1" />
-                                <span>{product.likes}</span>
+                                <span>{product.likes || 0}</span>
                               </div>
                               <div className="flex items-center">
                                 <TrendingUp className="h-3 w-3 mr-1" />
-                                <span>{product.orders}</span>
+                                <span>{product.orders || 0}</span>
                               </div>
                             </div>
 
                             <div className="flex items-center justify-between">
                               <div className="flex items-center">
                                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                                <span className="text-sm font-medium">{product.rating}</span>
+                                <span className="text-sm font-medium">{product.rating || 0}</span>
                                 <span className="text-xs text-muted-foreground ml-1">
-                                  ({product.reviews})
+                                  ({product.reviewCount || 0})
                                 </span>
                               </div>
                               <div className="flex space-x-1">
@@ -527,7 +514,7 @@ export default function ArtisanProducts() {
                                   variant="outline"
                                   size="sm"
                                   className="bg-card/60 border-primary/20"
-                                  onClick={() => navigate('edit-product', { id: product.id })}
+                                  onClick={() => navigate('edit-product', { id: product._id })}
                                 >
                                   <Edit className="h-3 w-3" />
                                 </Button>
@@ -535,7 +522,7 @@ export default function ArtisanProducts() {
                                   variant="outline"
                                   size="sm"
                                   className="bg-card/60 border-primary/20"
-                                  onClick={() => navigate('product-detail', { id: product.id })}
+                                  onClick={() => navigate('product-detail', { id: product._id })}
                                 >
                                   <Eye className="h-3 w-3" />
                                 </Button>
