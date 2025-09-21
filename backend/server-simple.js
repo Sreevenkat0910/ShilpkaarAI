@@ -9,6 +9,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Trust proxy for Vercel (CRITICAL FIX)
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet());
 
