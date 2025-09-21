@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "server-ultra-minimal.js",
+      "src": "server-supabase-real.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server-ultra-minimal.js"
+      "dest": "server-supabase-real.js"
     }
   ]
 }
