@@ -337,7 +337,10 @@ app.get('/api/products/search', async (req, res) => {
       products: fallbackProducts,
       total: fallbackProducts.length,
       page: parseInt(page),
-      limit: parseInt(limit)
+      limit: parseInt(limit),
+      filters: {
+        categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+      }
     });
 
   } catch (error) {
@@ -412,7 +415,10 @@ app.get('/products/search', async (req, res) => {
       products: fallbackProducts,
       total: fallbackProducts.length,
       page: parseInt(page),
-      limit: parseInt(limit)
+      limit: parseInt(limit),
+      filters: {
+        categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+      }
     });
 
   } catch (error) {
