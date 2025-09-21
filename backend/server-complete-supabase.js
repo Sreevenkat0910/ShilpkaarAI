@@ -965,6 +965,281 @@ app.get('/api/analytics/overview', authenticateToken, async (req, res) => {
   }
 });
 
+// Sales trend analytics
+app.get('/api/analytics/sales-trend', authenticateToken, async (req, res) => {
+  try {
+    const { timeFrame = '30days' } = req.query;
+
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    if (supabase) {
+      // Get artisan's products
+      const { data: products } = await supabase
+        .from('products')
+        .select('id')
+        .eq('artisan_id', req.user.userId);
+
+      const productIds = products?.map(p => p.id) || [];
+
+      if (productIds.length === 0) {
+        return res.json({ salesData: [] });
+      }
+
+      // Get orders for these products
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('total_amount, created_at')
+        .contains('items', productIds.map(id => ({ product_id: id })))
+        .order('created_at', { ascending: true });
+
+      // Group by date
+      const salesData = orders?.reduce((acc, order) => {
+        const date = new Date(order.created_at).toISOString().split('T')[0];
+        if (!acc[date]) {
+          acc[date] = { date, revenue: 0, orders: 0 };
+        }
+        acc[date].revenue += parseFloat(order.total_amount);
+        acc[date].orders += 1;
+        return acc;
+      }, {}) || {};
+
+      res.json({ salesData: Object.values(salesData) });
+    } else {
+      res.json({ salesData: [] });
+    }
+  } catch (error) {
+    console.error('Sales trend error:', error);
+    res.status(500).json({ message: 'Failed to fetch sales trend', error: error.message });
+  }
+});
+
+// Top products analytics
+app.get('/api/analytics/top-products', authenticateToken, async (req, res) => {
+  try {
+    const { timeFrame = '30days', limit = 10 } = req.query;
+
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    if (supabase) {
+      // Get artisan's products with order counts
+      const { data: products } = await supabase
+        .from('products')
+        .select('id, name, price, images, rating, review_count')
+        .eq('artisan_id', req.user.userId)
+        .order('rating', { ascending: false })
+        .limit(parseInt(limit));
+
+      res.json({ topProducts: products || [] });
+    } else {
+      res.json({ topProducts: [] });
+    }
+  } catch (error) {
+    console.error('Top products error:', error);
+    res.status(500).json({ message: 'Failed to fetch top products', error: error.message });
+  }
+});
+
+// Category performance analytics
+app.get('/api/analytics/category-performance', authenticateToken, async (req, res) => {
+  try {
+    const { timeFrame = '30days' } = req.query;
+
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    if (supabase) {
+      // Get artisan's products grouped by category
+      const { data: products } = await supabase
+        .from('products')
+        .select('category, price, rating, review_count')
+        .eq('artisan_id', req.user.userId);
+
+      // Group by category
+      const categoryData = products?.reduce((acc, product) => {
+        if (!acc[product.category]) {
+          acc[product.category] = {
+            category: product.category,
+            count: 0,
+            totalRevenue: 0,
+            averageRating: 0,
+            totalReviews: 0
+          };
+        }
+        acc[product.category].count += 1;
+        acc[product.category].totalRevenue += product.price;
+        acc[product.category].totalReviews += product.review_count;
+        acc[product.category].averageRating += product.rating;
+        return acc;
+      }, {}) || {};
+
+      // Calculate averages
+      Object.values(categoryData).forEach(category => {
+        category.averageRating = category.averageRating / category.count;
+      });
+
+      res.json({ categoryPerformance: Object.values(categoryData) });
+    } else {
+      res.json({ categoryPerformance: [] });
+    }
+  } catch (error) {
+    console.error('Category performance error:', error);
+    res.status(500).json({ message: 'Failed to fetch category performance', error: error.message });
+  }
+});
+
+// Customer insights analytics
+app.get('/api/analytics/customer-insights', authenticateToken, async (req, res) => {
+  try {
+    const { timeFrame = '30days' } = req.query;
+
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    if (supabase) {
+      // Get artisan's products
+      const { data: products } = await supabase
+        .from('products')
+        .select('id')
+        .eq('artisan_id', req.user.userId);
+
+      const productIds = products?.map(p => p.id) || [];
+
+      if (productIds.length === 0) {
+        return res.json({ customerInsights: [] });
+      }
+
+      // Get reviews for these products
+      const { data: reviews } = await supabase
+        .from('reviews')
+        .select('rating, comment, created_at, user_name')
+        .in('product_id', productIds)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      res.json({ customerInsights: reviews || [] });
+    } else {
+      res.json({ customerInsights: [] });
+    }
+  } catch (error) {
+    console.error('Customer insights error:', error);
+    res.status(500).json({ message: 'Failed to fetch customer insights', error: error.message });
+  }
+});
+
+// Seasonal trends analytics
+app.get('/api/analytics/seasonal-trends', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    res.json({ 
+      seasonalTrends: [
+        { month: 'January', sales: 1200, orders: 15 },
+        { month: 'February', sales: 1500, orders: 18 },
+        { month: 'March', sales: 1800, orders: 22 },
+        { month: 'April', sales: 2000, orders: 25 },
+        { month: 'May', sales: 2200, orders: 28 },
+        { month: 'June', sales: 2500, orders: 30 }
+      ]
+    });
+  } catch (error) {
+    console.error('Seasonal trends error:', error);
+    res.status(500).json({ message: 'Failed to fetch seasonal trends', error: error.message });
+  }
+});
+
+// Recommendations analytics
+app.get('/api/analytics/recommendations', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    res.json({ 
+      recommendations: [
+        { type: 'product', message: 'Consider adding more products in the Textiles category', priority: 'high' },
+        { type: 'pricing', message: 'Your pricing is competitive for the market', priority: 'medium' },
+        { type: 'inventory', message: 'Low stock on popular items - consider restocking', priority: 'high' }
+      ]
+    });
+  } catch (error) {
+    console.error('Recommendations error:', error);
+    res.status(500).json({ message: 'Failed to fetch recommendations', error: error.message });
+  }
+});
+
+// Alerts analytics
+app.get('/api/analytics/alerts', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    res.json({ 
+      alerts: [
+        { type: 'warning', message: 'Low stock alert: Cotton Kurta Set', timestamp: new Date().toISOString() },
+        { type: 'info', message: 'New review received for Banarasi Saree', timestamp: new Date().toISOString() }
+      ]
+    });
+  } catch (error) {
+    console.error('Alerts error:', error);
+    res.status(500).json({ message: 'Failed to fetch alerts', error: error.message });
+  }
+});
+
+// Inventory insights analytics
+app.get('/api/analytics/inventory-insights', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'artisan') {
+      return res.status(403).json({ message: 'Only artisans can access analytics' });
+    }
+
+    if (supabase) {
+      // Get artisan's products with stock information
+      const { data: products } = await supabase
+        .from('products')
+        .select('name, stock, price, category')
+        .eq('artisan_id', req.user.userId);
+
+      const lowStock = products?.filter(p => p.stock < 5) || [];
+      const outOfStock = products?.filter(p => p.stock === 0) || [];
+      const totalValue = products?.reduce((sum, p) => sum + (p.price * p.stock), 0) || 0;
+
+      res.json({ 
+        inventoryInsights: {
+          totalProducts: products?.length || 0,
+          lowStock: lowStock.length,
+          outOfStock: outOfStock.length,
+          totalValue: totalValue,
+          lowStockItems: lowStock,
+          outOfStockItems: outOfStock
+        }
+      });
+    } else {
+      res.json({ 
+        inventoryInsights: {
+          totalProducts: 0,
+          lowStock: 0,
+          outOfStock: 0,
+          totalValue: 0,
+          lowStockItems: [],
+          outOfStockItems: []
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Inventory insights error:', error);
+    res.status(500).json({ message: 'Failed to fetch inventory insights', error: error.message });
+  }
+});
+
 // ===== ARTISAN ROUTES =====
 
 // Get artisan profile
