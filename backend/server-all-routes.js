@@ -471,7 +471,10 @@ app.get('/products/all', async (req, res) => {
     
     res.json({
       products: fallbackProducts,
-      total: fallbackProducts.length
+      total: fallbackProducts.length,
+      filters: {
+        categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+      }
     });
 
   } catch (error) {
