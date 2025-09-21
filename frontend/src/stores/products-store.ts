@@ -2,26 +2,26 @@ import { create } from 'zustand'
 import { searchApi, ApiError } from '../utils/api'
 
 export interface Product {
-  _id: string
+  id: string
   name: string
   description: string
   price: number
-  originalPrice?: number
+  original_price?: number
   images: string[]
   category: string
   subcategory?: string
   craft?: string
   artisan: {
-    _id: string
+    id: string
     name: string
     location?: string
     craft?: string
     experience?: number
     rating?: number
   }
-  artisanName: string
+  artisan_name: string
   stock: number
-  isActive: boolean
+  is_active: boolean
   tags?: string[]
   materials?: string[]
   color?: string[]
@@ -29,7 +29,7 @@ export interface Product {
   occasion?: string[]
   location?: string
   region?: string
-  ageGroup?: string
+  age_group?: string
   gender?: string
   season?: string[]
   sustainability?: string
@@ -38,9 +38,9 @@ export interface Product {
   featured?: boolean
   trending?: boolean
   rating?: number
-  reviewCount?: number
-  createdAt: string
-  updatedAt: string
+  review_count?: number
+  created_at: string
+  updated_at: string
 }
 
 export interface SearchFilters {
@@ -145,12 +145,17 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await searchApi.getAllProducts(count, 1)
-      const { productsData, pagination } = response.data
+      const { products, total } = response.data
       
       set({ 
-        allProducts: productsData,
-        filteredProducts: productsData,
-        pagination: pagination,
+        allProducts: products,
+        filteredProducts: products,
+        pagination: {
+          current: 1,
+          pages: Math.ceil(total / count),
+          total: total,
+          limit: count
+        },
         isLoading: false 
       })
     } catch (error) {
@@ -213,7 +218,7 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
     try {
       const response = await searchApi.getProduct(productId)
       set({ 
-        singleProduct: response.data.productData,
+        singleProduct: response.data.product,
         isLoading: false 
       })
     } catch (error) {
@@ -244,11 +249,16 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
         limit: get().pagination.limit
       })
       
-      const { products, pagination, filters: filterOptions } = response.data
+      const { products, total, page, limit, filters: filterOptions } = response.data
       
       set({ 
         filteredProducts: products,
-        pagination: pagination,
+        pagination: {
+          current: page,
+          pages: Math.ceil(total / limit),
+          total: total,
+          limit: limit
+        },
         filterOptions: filterOptions,
         searchFilters: mergedFilters,
         isLoading: false 
