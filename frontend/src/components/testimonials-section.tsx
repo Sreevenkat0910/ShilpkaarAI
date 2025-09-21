@@ -116,7 +116,6 @@ export default function TestimonialsSection() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <Avatar>
-                        <AvatarImage src={`/placeholder-avatar-${testimonial.id}.jpg`} />
                         <AvatarFallback className="bg-primary/10 text-primary">
                           {testimonial.avatar}
                         </AvatarFallback>
