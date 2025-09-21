@@ -8,7 +8,7 @@ require('dotenv').config();
 const { supabaseAdmin, UserOperations, ProductOperations, OrderOperations, FavoriteOperations, ReviewOperations } = require('./supabase-client');
 
 // Import routes (we'll update these to use Supabase)
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth-supabase');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const profileRoutes = require('./routes/profile');
