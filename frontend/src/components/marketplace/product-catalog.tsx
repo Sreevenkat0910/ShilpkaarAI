@@ -22,7 +22,7 @@ import {
 import { useRouter } from '../router'
 import { useFavorites } from '../favorites/favorites-context'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
-import { apiCall, ApiError } from '../../utils/api'
+import { searchApi } from '../../utils/api'
 
 interface Product {
   _id: string
@@ -47,7 +47,7 @@ interface Product {
 }
 
 export default function ProductCatalog() {
-  const { navigate, goBack } = useRouter()
+  const { router, navigate, goBack } = useRouter()
   const { isFavorited, toggleFavorite } = useFavorites()
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,48 +58,105 @@ export default function ProductCatalog() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [favoriteLoading, setFavoriteLoading] = useState<string | null>(null)
+  const [availableCategories, setAvailableCategories] = useState<string[]>([])
+
+  // Get category from router params
+  const categoryFromRoute = router.params.category
 
   useEffect(() => {
     loadProducts()
+    loadCategories()
   }, [])
 
-  const loadProducts = async () => {
+  // Update selected category when route changes
+  useEffect(() => {
+    if (categoryFromRoute) {
+      setSelectedCategory(categoryFromRoute)
+      loadProducts(categoryFromRoute)
+    }
+  }, [categoryFromRoute])
+
+  const loadProducts = async (category?: string) => {
     try {
       setLoading(true)
       setError(null)
-      const response = await apiCall('/products/all?count=20')
-      setProducts(response.data.productsData)
-    } catch (error) {
-      if (error instanceof ApiError) {
-        setError(error.message)
-      } else {
-        setError('Failed to load products')
+      
+      const searchParams: any = {
+        page: 1,
+        limit: 20,
+        sortBy: sortBy
       }
+      
+      // Add category filter if specified
+      if (category && category !== 'all') {
+        searchParams.category = category
+      }
+      
+      // Add search query if specified
+      if (searchQuery) {
+        searchParams.q = searchQuery
+      }
+      
+      // Add price range filter
+      if (priceRange[0] > 0 || priceRange[1] < 5000) {
+        searchParams.minPrice = priceRange[0]
+        searchParams.maxPrice = priceRange[1]
+      }
+      
+      const response = await searchApi.searchProducts(searchParams)
+      if (response && response.data && response.data.products) {
+        setProducts(response.data.products)
+      } else {
+        console.warn('Products not found in API response')
+        setProducts([])
+      }
+    } catch (error) {
+      console.error('Error loading products:', error)
+      setError('Failed to load products')
     } finally {
       setLoading(false)
     }
   }
 
-  const categories = [
-    'All Categories',
-    'Textiles',
-    'Pottery',
-    'Jewelry',
-    'Woodwork',
-    'Metalwork',
-    'Paintings'
-  ]
+  const loadCategories = async () => {
+    try {
+      const response = await searchApi.searchProducts({ limit: 1 })
+      if (response && response.data && response.data.filters && response.data.filters.categories) {
+        setAvailableCategories(response.data.filters.categories)
+      } else {
+        console.warn('Categories not found in API response')
+        setAvailableCategories([])
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error)
+      setAvailableCategories([])
+    }
+  }
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.artisanName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.category.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || 
-                           product.category.toLowerCase() === selectedCategory.toLowerCase()
-    const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
-    
-    return matchesSearch && matchesCategory && matchesPrice
-  })
+  const categories = ['All Categories', ...(availableCategories || [])]
+
+  // Products are already filtered by the API, so we use them directly
+  const filteredProducts = products || []
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category)
+    loadProducts(category === 'All Categories' ? 'all' : category)
+  }
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+  }
+
+  const handlePriceRangeChange = (range: number[]) => {
+    setPriceRange(range)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+  }
+
+  const handleSortChange = (sort: string) => {
+    setSortBy(sort)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -116,7 +173,7 @@ export default function ProductCatalog() {
                 <Input
                   placeholder="Search for crafts, artisans, or categories..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   className="pl-10 pr-10 bg-secondary/50"
                 />
                 <Button 
@@ -147,7 +204,7 @@ export default function ProductCatalog() {
                   {/* Category */}
                   <div>
                     <h4 className="font-medium mb-3">Category</h4>
-                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <Select value={selectedCategory} onValueChange={handleCategoryChange}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -170,7 +227,7 @@ export default function ProductCatalog() {
                     <div className="px-2">
                       <Slider
                         value={priceRange}
-                        onValueChange={setPriceRange}
+                        onValueChange={handlePriceRangeChange}
                         max={5000}
                         min={0}
                         step={100}
@@ -211,10 +268,10 @@ export default function ProductCatalog() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
-                  {filteredProducts.length} products found
+                  {filteredProducts?.length || 0} products found
                 </span>
                 <Separator orientation="vertical" className="h-6" />
-                <Select value={sortBy} onValueChange={setSortBy}>
+                <Select value={sortBy} onValueChange={handleSortChange}>
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>

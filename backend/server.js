@@ -12,6 +12,7 @@ const profileRoutes = require('./routes/profile');
 const analyticsRoutes = require('./routes/analytics');
 const reviewRoutes = require('./routes/reviews');
 const favoriteRoutes = require('./routes/favorites');
+const artisanRoutes = require('./routes/artisans');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -60,6 +61,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/artisans', artisanRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

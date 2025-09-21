@@ -182,6 +182,116 @@ export const favoritesApi = {
     apiCall('/favorites/user/count')
 }
 
+// Search specific API calls
+export const searchApi = {
+  // Product search with advanced filters
+  searchProducts: (params: {
+    q?: string,
+    category?: string,
+    subcategory?: string,
+    craft?: string,
+    artisan?: string,
+    location?: string,
+    region?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    minRating?: number,
+    materials?: string,
+    colors?: string,
+    techniques?: string,
+    occasions?: string,
+    ageGroup?: string,
+    gender?: string,
+    season?: string,
+    sustainability?: string,
+    condition?: string,
+    availability?: string,
+    featured?: boolean,
+    trending?: boolean,
+    sortBy?: string,
+    sortOrder?: string,
+    page?: number,
+    limit?: number
+  } = {}) => {
+    const searchParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        searchParams.append(key, value.toString())
+      }
+    })
+    
+    return apiCall(`/products/search?${searchParams.toString()}`)
+  },
+
+  // Get all categories
+  getCategories: (count: number = 20) =>
+    apiCall(`/products/categories/all?count=${count}`),
+
+  // Get products by category
+  getProductsByCategory: (category: string) =>
+    apiCall(`/products/category?category=${category}`),
+
+  // Get all products with pagination
+  getAllProducts: (count: number = 20, page: number = 1) =>
+    apiCall(`/products/all?count=${count}&page=${page}`),
+
+  // Get single product
+  getProduct: (id: string) =>
+    apiCall(`/products/one?id=${id}`)
+}
+
+// Artisan search specific API calls
+export const artisanApi = {
+  // Artisan search with advanced filters
+  searchArtisans: (params: {
+    q?: string,
+    craft?: string,
+    location?: string,
+    region?: string,
+    state?: string,
+    city?: string,
+    minExperience?: number,
+    maxExperience?: number,
+    minRating?: number,
+    minProducts?: number,
+    techniques?: string,
+    specializations?: string,
+    certifications?: string,
+    workshopOffered?: boolean,
+    sortBy?: string,
+    sortOrder?: string,
+    page?: number,
+    limit?: number
+  } = {}) => {
+    const searchParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        searchParams.append(key, value.toString())
+      }
+    })
+    
+    return apiCall(`/artisans/search?${searchParams.toString()}`)
+  },
+
+  // Get all artisans
+  getAllArtisans: (count: number = 20, page: number = 1) =>
+    apiCall(`/artisans/all?count=${count}&page=${page}`),
+
+  // Get single artisan
+  getArtisan: (id: string) =>
+    apiCall(`/artisans/${id}`),
+
+  // Get all crafts
+  getCrafts: () =>
+    apiCall('/artisans/crafts/all'),
+
+  // Get all locations
+  getLocations: () =>
+    apiCall('/artisans/locations/all')
+}
+
 export default {
   API_BASE,
   getAuthToken,
@@ -190,5 +300,7 @@ export default {
   analyticsApi,
   authApi,
   reviewApi,
-  favoritesApi
+  favoritesApi,
+  searchApi,
+  artisanApi
 }

@@ -15,7 +15,7 @@ export default function CategoriesPage() {
 
   const categories = [
     {
-      id: 'textiles',
+      id: 'Textiles',
       name: 'Textiles & Fabrics',
       description: 'Handwoven sarees, fabrics, and traditional garments',
       itemCount: 450,
@@ -24,7 +24,7 @@ export default function CategoriesPage() {
       subcategories: ['Sarees', 'Silk Fabrics', 'Cotton Textiles', 'Block Prints']
     },
     {
-      id: 'pottery',
+      id: 'Pottery',
       name: 'Pottery & Ceramics',
       description: 'Traditional clay pottery, terracotta, and ceramic art',
       itemCount: 320,
@@ -33,7 +33,7 @@ export default function CategoriesPage() {
       subcategories: ['Blue Pottery', 'Terracotta', 'Clay Vessels', 'Decorative Items']
     },
     {
-      id: 'jewelry',
+      id: 'Jewelry',
       name: 'Jewelry & Ornaments',
       description: 'Handcrafted silver, brass, and traditional jewelry',
       itemCount: 280,
@@ -42,7 +42,7 @@ export default function CategoriesPage() {
       subcategories: ['Silver Work', 'Brass Items', 'Traditional Sets', 'Modern Fusion']
     },
     {
-      id: 'woodwork',
+      id: 'Woodwork',
       name: 'Woodwork & Carving',
       description: 'Hand-carved furniture, sculptures, and decorative pieces',
       itemCount: 180,
@@ -51,7 +51,7 @@ export default function CategoriesPage() {
       subcategories: ['Furniture', 'Sculptures', 'Toys', 'Decorative']
     },
     {
-      id: 'metalwork',
+      id: 'Metalwork',
       name: 'Metalwork & Crafts',
       description: 'Brass, copper, and iron crafts with traditional techniques',
       itemCount: 150,
@@ -60,13 +60,22 @@ export default function CategoriesPage() {
       subcategories: ['Brass Work', 'Copper Items', 'Iron Crafts', 'Mixed Metal']
     },
     {
-      id: 'paintings',
+      id: 'Art',
       name: 'Paintings & Art',
       description: 'Traditional paintings, folk art, and contemporary pieces',
       itemCount: 200,
       trending: true,
       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBwYWludGluZ3MlMjB0cmFkaXRpb25hbHxlbnwxfHx8fDE3NTgzNjYyMTB8MA&ixlib=rb-4.1.0&q=80&w=1080',
       subcategories: ['Madhubani', 'Warli Art', 'Miniature', 'Contemporary']
+    },
+    {
+      id: 'Clothing',
+      name: 'Clothing & Apparel',
+      description: 'Traditional and contemporary clothing items',
+      itemCount: 120,
+      trending: false,
+      image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBjdXJ0YSUyMGhhbmRjcmFmdHxlbnwxfHx8fDE3NTgzNjYyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      subcategories: ['Kurtas', 'Traditional Wear', 'Modern Fusion', 'Accessories']
     }
   ]
 

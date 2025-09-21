@@ -30,9 +30,10 @@ import { ImageWithFallback } from '../figma/ImageWithFallback'
 export default function CustomerDashboard() {
   const { navigate } = useRouter()
   const { user, logout } = useAuth()
-  const { favorites, loading: favoritesLoading, getUserFavoriteCount } = useFavorites()
+  const { favorites, loading: favoritesLoading, getUserFavoriteCount, removeFromFavorites, isFavorited } = useFavorites()
   const { myOrders, isLoading: ordersLoading, fetchMyOrders } = useOrdersStore()
   const [activeTab, setActiveTab] = useState('orders')
+  const [removingId, setRemovingId] = useState<string | null>(null)
 
   // Load orders when component mounts
   React.useEffect(() => {
@@ -44,6 +45,16 @@ export default function CustomerDashboard() {
   // Get recent orders (last 2)
   const recentOrders = myOrders.slice(0, 2)
 
+  const handleRemoveFavorite = async (productId: string) => {
+    try {
+      setRemovingId(productId)
+      await removeFromFavorites(productId)
+    } catch (error) {
+      console.error('Error removing favorite:', error)
+    } finally {
+      setRemovingId(null)
+    }
+  }
 
   const handleLogout = () => {
     logout()
@@ -227,15 +238,31 @@ export default function CustomerDashboard() {
                             </div>
                             <div className="text-right">
                               <p className="font-semibold">₹{order.totalAmount}</p>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => navigate('order-tracking', { orderId: order._id })}
-                                className="mt-1"
-                              >
-                                <Truck className="h-4 w-4 mr-1" />
-                                Track
-                              </Button>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => navigate('order-tracking', { orderId: order._id })}
+                                >
+                                  <Truck className="h-4 w-4 mr-1" />
+                                  Track
+                                </Button>
+                                {order.items[0]?.product && isFavorited(order.items[0].product._id) && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="bg-card/60 border-primary/20"
+                                    onClick={() => handleRemoveFavorite(order.items[0].product._id)}
+                                    disabled={removingId === order.items[0].product._id}
+                                  >
+                                    {removingId === order.items[0].product._id ? (
+                                      <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                                    ) : (
+                                      <Heart className="h-4 w-4 fill-current text-red-500" />
+                                    )}
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -297,8 +324,14 @@ export default function CustomerDashboard() {
                                 variant="outline" 
                                 size="sm"
                                 className="bg-card/60 border-primary/20"
+                                onClick={() => handleRemoveFavorite(favorite.product._id)}
+                                disabled={removingId === favorite.product._id}
                               >
-                                <Heart className="h-4 w-4 fill-current text-red-500" />
+                                {removingId === favorite.product._id ? (
+                                  <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  <Heart className="h-4 w-4 fill-current text-red-500" />
+                                )}
                               </Button>
                             </div>
                           </div>
