@@ -25,25 +25,25 @@ import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { searchApi } from '../../utils/api'
 
 interface Product {
-  _id: string
+  id: string
   name: string
   description: string
   price: number
-  originalPrice?: number
+  original_price?: number
   rating: number
-  reviewCount: number
+  review_count: number
   artisan: {
-    _id: string
+    id: string
     name: string
     location: string
     craft: string
   }
-  artisanName: string
+  artisan_name: string
   category: string
   images: string[]
   tags: string[]
   stock: number
-  createdAt: string
+  created_at: string
 }
 
 export default function ProductCatalog() {
@@ -70,6 +70,7 @@ export default function ProductCatalog() {
 
   // Update selected category when route changes
   useEffect(() => {
+    console.log('🔍 Category from route:', categoryFromRoute)
     if (categoryFromRoute) {
       setSelectedCategory(categoryFromRoute)
       loadProducts(categoryFromRoute)
@@ -81,6 +82,8 @@ export default function ProductCatalog() {
       setLoading(true)
       setError(null)
       
+      console.log('🔄 Loading products for category:', category)
+      
       const searchParams: any = {
         page: 1,
         limit: 20,
@@ -90,6 +93,7 @@ export default function ProductCatalog() {
       // Add category filter if specified
       if (category && category !== 'all') {
         searchParams.category = category
+        console.log('📂 Added category filter:', category)
       }
       
       // Add search query if specified
@@ -103,11 +107,15 @@ export default function ProductCatalog() {
         searchParams.maxPrice = priceRange[1]
       }
       
+      console.log('🌐 API call with params:', searchParams)
       const response = await searchApi.searchProducts(searchParams)
+      console.log('📦 API response:', response.data)
+      
       if (response && response.data && response.data.products) {
+        console.log('✅ Products loaded:', response.data.products.length)
         setProducts(response.data.products)
       } else {
-        console.warn('Products not found in API response')
+        console.warn('❌ Products not found in API response')
         setProducts([])
       }
     } catch (error) {
@@ -120,9 +128,9 @@ export default function ProductCatalog() {
 
   const loadCategories = async () => {
     try {
-      const response = await searchApi.searchProducts({ limit: 1 })
-      if (response && response.data && response.data.filters && response.data.filters.categories) {
-        setAvailableCategories(response.data.filters.categories)
+      const response = await searchApi.getCategories()
+      if (response && response.data) {
+        setAvailableCategories(response.data)
       } else {
         console.warn('Categories not found in API response')
         setAvailableCategories([])
@@ -320,9 +328,9 @@ export default function ProductCatalog() {
               <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' : 'space-y-4'}>
                 {filteredProducts.map((product) => (
                 <Card
-                  key={product._id} 
+                  key={product.id} 
                   className="group cursor-pointer border-0 bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
-                  onClick={() => navigate('product-detail', { id: product._id })}
+                  onClick={() => navigate('product-detail', { id: product.id })}
                 >
                   <CardContent className="p-0">
                     {viewMode === 'grid' ? (
@@ -351,22 +359,22 @@ export default function ProductCatalog() {
                             variant="ghost"
                             size="icon"
                             className={`absolute top-2 right-2 bg-white/80 hover:bg-white ${
-                              isFavorited(product._id) ? 'text-red-500' : 'text-muted-foreground'
+                              isFavorited(product.id) ? 'text-red-500' : 'text-muted-foreground'
                             }`}
                             onClick={async (e) => {
                               e.stopPropagation()
                               try {
-                                setFavoriteLoading(product._id)
-                                await toggleFavorite(product._id)
+                                setFavoriteLoading(product.id)
+                                await toggleFavorite(product.id)
                               } catch (error) {
                                 console.error('Error toggling favorite:', error)
                               } finally {
                                 setFavoriteLoading(null)
                               }
                             }}
-                            disabled={favoriteLoading === product._id}
+                            disabled={favoriteLoading === product.id}
                           >
-                            <Heart className={`h-4 w-4 ${isFavorited(product._id) ? 'fill-current' : ''}`} />
+                            <Heart className={`h-4 w-4 ${isFavorited(product.id) ? 'fill-current' : ''}`} />
                           </Button>
                         </div>
                         <div className="p-4">
@@ -390,11 +398,11 @@ export default function ProductCatalog() {
                               ))}
                             </div>
                             <span className="text-xs text-muted-foreground ml-1">
-                              ({product.reviewCount})
+                              ({product.review_count})
                             </span>
                           </div>
                           <div className="flex items-center text-xs text-muted-foreground mb-3">
-                            <span className="font-medium">{product.artisanName}</span>
+                            <span className="font-medium">{product.artisan_name}</span>
                             <Badge variant="secondary" className="ml-1 text-xs">
                               ✓
                             </Badge>
@@ -405,9 +413,9 @@ export default function ProductCatalog() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <span className="font-bold text-primary">₹{product.price}</span>
-                              {product.originalPrice && (
+                              {product.original_price && (
                                 <span className="text-sm text-muted-foreground line-through">
-                                  ₹{product.originalPrice}
+                                  ₹{product.original_price}
                                 </span>
                               )}
                             </div>
@@ -447,9 +455,9 @@ export default function ProductCatalog() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <span className="font-bold text-primary">₹{product.price}</span>
-                              {product.originalPrice && (
+                              {product.original_price && (
                                 <span className="text-sm text-muted-foreground line-through">
-                                  ₹{product.originalPrice}
+                                  ₹{product.original_price}
                                 </span>
                               )}
                             </div>
