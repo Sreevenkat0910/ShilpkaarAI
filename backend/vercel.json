@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "server-supabase-real.js",
+      "src": "server-hybrid.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server-supabase-real.js"
+      "dest": "server-hybrid.js"
     }
   ]
 }
