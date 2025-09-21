@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "server-simple.js",
+      "src": "server-minimal.js",
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "50mb"
@@ -12,11 +12,11 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server-simple.js"
+      "dest": "server-minimal.js"
     }
   ],
   "functions": {
-    "server-simple.js": {
+    "server-minimal.js": {
       "maxDuration": 30
     }
   }
