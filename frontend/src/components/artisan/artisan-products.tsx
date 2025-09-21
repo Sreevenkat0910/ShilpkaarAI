@@ -65,17 +65,18 @@ export default function ArtisanProducts() {
       
       // Fetch all products and filter by current artisan
       const response = await apiCall('/products/all')
-      const allProducts = response.data.productsData
+      const allProducts = response.data.products || []
       
       // Filter products for current artisan
       const artisanProducts = allProducts.filter((product: any) => 
-        product.artisan._id === user?.id
+        product.artisan_id === user?.id
       )
       
       setProducts(artisanProducts)
     } catch (error) {
       console.error('Error fetching products:', error)
       setError('Failed to load products')
+      setProducts([]) // Set empty array on error
     } finally {
       setLoading(false)
     }
@@ -166,7 +167,7 @@ export default function ArtisanProducts() {
     }
   }
 
-  const filteredProducts = products.filter(product => {
+  const filteredProducts = (products || []).filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.category.toLowerCase().includes(searchQuery.toLowerCase())
@@ -177,13 +178,13 @@ export default function ArtisanProducts() {
   })
 
   const stats = {
-    total: products.length,
-    active: products.filter(p => p.isActive !== false).length,
-    draft: products.filter(p => p.isActive === false).length,
-    outOfStock: products.filter(p => p.stock === 0).length,
-    totalViews: products.reduce((sum, p) => sum + (p.views || 0), 0),
-    totalOrders: products.reduce((sum, p) => sum + (p.orders || 0), 0),
-    totalRevenue: products.reduce((sum, p) => sum + (p.price * (p.orders || 0)), 0)
+    total: (products || []).length,
+    active: (products || []).filter(p => p.isActive !== false).length,
+    draft: (products || []).filter(p => p.isActive === false).length,
+    outOfStock: (products || []).filter(p => p.stock === 0).length,
+    totalViews: (products || []).reduce((sum, p) => sum + (p.views || 0), 0),
+    totalOrders: (products || []).reduce((sum, p) => sum + (p.orders || 0), 0),
+    totalRevenue: (products || []).reduce((sum, p) => sum + (p.price * (p.orders || 0)), 0)
   }
 
   if (loading) {
@@ -380,7 +381,7 @@ export default function ArtisanProducts() {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((product) => (
                       <Card 
-                        key={product._id}
+                        key={product.id}
                         className="group border-0 bg-card/40 backdrop-blur-sm card-shadow hover:card-shadow-lg transition-all duration-300"
                       >
                         <CardContent className="p-4">
@@ -412,38 +413,38 @@ export default function ArtisanProducts() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-48">
-                                  <DropdownMenuItem onClick={() => handleViewProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleViewProduct(product.id)}>
                                     <Eye className="h-4 w-4 mr-2" />
                                     View Details
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleEditProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleEditProduct(product.id)}>
                                     <Edit className="h-4 w-4 mr-2" />
                                     Edit Product
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleDuplicateProduct(product.id)}>
                                     <Copy className="h-4 w-4 mr-2" />
                                     Duplicate
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => handleShareProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleShareProduct(product.id)}>
                                     <Share2 className="h-4 w-4 mr-2" />
                                     Share Product
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleRefreshProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleRefreshProduct(product.id)}>
                                     <RefreshCw className="h-4 w-4 mr-2" />
                                     Refresh
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => handleArchiveProduct(product._id)}>
+                                  <DropdownMenuItem onClick={() => handleArchiveProduct(product.id)}>
                                     <Archive className="h-4 w-4 mr-2" />
                                     Archive
                                   </DropdownMenuItem>
                                   <DropdownMenuItem 
-                                    onClick={() => handleDeleteProduct(product._id)}
+                                    onClick={() => handleDeleteProduct(product.id)}
                                     className="text-red-600 focus:text-red-600"
-                                    disabled={deletingProduct === product._id}
+                                    disabled={deletingProduct === product.id}
                                   >
-                                    {deletingProduct === product._id ? (
+                                    {deletingProduct === product.id ? (
                                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                                     ) : (
                                       <Trash2 className="h-4 w-4 mr-2" />
@@ -471,9 +472,9 @@ export default function ArtisanProducts() {
                                   <span className="text-lg font-semibold text-primary">
                                     ₹{product.price.toLocaleString()}
                                   </span>
-                                  {product.originalPrice && product.originalPrice > product.price && (
+                                  {product.original_price && product.original_price > product.price && (
                                     <span className="text-sm text-muted-foreground line-through">
-                                      ₹{product.originalPrice.toLocaleString()}
+                                      ₹{product.original_price.toLocaleString()}
                                     </span>
                                   )}
                                 </div>
@@ -506,7 +507,7 @@ export default function ArtisanProducts() {
                                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                                 <span className="text-sm font-medium">{product.rating || 0}</span>
                                 <span className="text-xs text-muted-foreground ml-1">
-                                  ({product.reviewCount || 0})
+                                  ({product.review_count || 0})
                                 </span>
                               </div>
                               <div className="flex space-x-1">
@@ -514,7 +515,7 @@ export default function ArtisanProducts() {
                                   variant="outline"
                                   size="sm"
                                   className="bg-card/60 border-primary/20"
-                                  onClick={() => navigate('edit-product', { id: product._id })}
+                                  onClick={() => navigate('edit-product', { id: product.id })}
                                 >
                                   <Edit className="h-3 w-3" />
                                 </Button>
@@ -522,7 +523,7 @@ export default function ArtisanProducts() {
                                   variant="outline"
                                   size="sm"
                                   className="bg-card/60 border-primary/20"
-                                  onClick={() => navigate('product-detail', { id: product._id })}
+                                  onClick={() => navigate('product-detail', { id: product.id })}
                                 >
                                   <Eye className="h-3 w-3" />
                                 </Button>

@@ -140,7 +140,7 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
       console.log('API: Successfully removed from favorites:', productId)
       
       // Remove from local state
-      setFavorites(prev => prev.filter(fav => fav.product._id !== productId))
+      setFavorites(prev => prev.filter(fav => fav.product.id !== productId))
       setFavoriteIds(prev => {
         const newSet = new Set(prev)
         newSet.delete(productId)
@@ -178,7 +178,7 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
         await refreshFavorites()
       } else {
         // Product was removed from favorites
-        setFavorites(prev => prev.filter(fav => fav.product._id !== productId))
+        setFavorites(prev => prev.filter(fav => fav.product.id !== productId))
         setFavoriteIds(prev => {
           const newSet = new Set(prev)
           newSet.delete(productId)
