@@ -41,6 +41,10 @@ export const apiCall = async <T>(
     const url = `${API_BASE}${endpoint}`
     const token = getAuthToken()
     
+    // Debug logging for production
+    console.log('🌐 API Call:', url)
+    console.log('🌐 API_BASE:', API_BASE)
+    
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
       ...options.headers
@@ -54,6 +58,8 @@ export const apiCall = async <T>(
       ...options,
       headers
     })
+    
+    console.log('📡 API Response status:', response.status)
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Unknown error' }))
