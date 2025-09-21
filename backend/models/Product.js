@@ -78,6 +78,52 @@ const productSchema = new mongoose.Schema({
     default: 0,
     min: 0
   },
+  subcategory: {
+    type: String,
+    trim: true
+  },
+  craft: {
+    type: String,
+    trim: true
+  },
+  color: [{
+    type: String,
+    trim: true
+  }],
+  size: {
+    type: String,
+    trim: true
+  },
+  condition: {
+    type: String,
+    enum: ['new', 'used', 'refurbished'],
+    default: 'new'
+  },
+  availability: {
+    type: String,
+    enum: ['in_stock', 'out_of_stock', 'discontinued'],
+    default: 'in_stock'
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  trending: {
+    type: Boolean,
+    default: false
+  },
+  searchKeywords: [{
+    type: String,
+    trim: true
+  }],
+  craftStory: {
+    type: String,
+    trim: true
+  },
+  careInstructions: {
+    type: String,
+    trim: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
