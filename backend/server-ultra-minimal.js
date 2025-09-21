@@ -45,8 +45,60 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
+// Also handle /auth/login for frontend compatibility
+app.post('/auth/login', (req, res) => {
+  console.log('Login request received (legacy path)');
+  
+  const { mobile, password } = req.body;
+  
+  if (!mobile || !password) {
+    return res.status(400).json({ message: 'Mobile and password are required' });
+  }
+
+  res.json({
+    message: 'Login successful',
+    token: 'test-token-123',
+    user: {
+      id: 'test-user-id',
+      name: 'Test User',
+      mobile: mobile,
+      role: 'customer',
+      email: 'test@example.com',
+      location: 'Mumbai',
+      craft: '',
+      isVerified: true
+    }
+  });
+});
+
 app.post('/api/auth/register', (req, res) => {
   console.log('Register request received');
+  
+  const { name, mobile, password, role } = req.body;
+  
+  if (!name || !mobile || !password || !role) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  res.status(201).json({
+    message: 'User registered successfully',
+    token: 'test-token-123',
+    user: {
+      id: 'new-user-id',
+      name: name,
+      mobile: mobile,
+      role: role,
+      email: '',
+      location: '',
+      craft: '',
+      isVerified: false
+    }
+  });
+});
+
+// Also handle /auth/register for frontend compatibility
+app.post('/auth/register', (req, res) => {
+  console.log('Register request received (legacy path)');
   
   const { name, mobile, password, role } = req.body;
   
