@@ -26,7 +26,7 @@ export default function ExplorePage() {
 
   const trendingProducts = [
     {
-      id: '68cec39fa4dae9e7c23ef549', // Handwoven Banarasi Silk Saree
+      id: '68cfdcc1fe3c34d61b7f85dc', // Handwoven Banarasi Silk Saree
       name: 'Handwoven Banarasi Silk Saree',
       price: 2500,
       originalPrice: 3200,
@@ -39,7 +39,7 @@ export default function ExplorePage() {
       trending: true
     },
     {
-      id: '68cec39fa4dae9e7c23ef54b', // Blue Pottery Dinner Set
+      id: '68cfdcc1fe3c34d61b7f85e2', // Blue Pottery Dinner Set
       name: 'Blue Pottery Dinner Set',
       price: 1800,
       rating: 4.6,
@@ -51,7 +51,7 @@ export default function ExplorePage() {
       trending: false
     },
     {
-      id: '68cec39fa4dae9e7c23ef54d', // Silver Filigree Earrings
+      id: '68cfdcc1fe3c34d61b7f85e4', // Silver Filigree Earrings
       name: 'Silver Filigree Earrings',
       price: 750,
       originalPrice: 950,
@@ -94,7 +94,7 @@ export default function ExplorePage() {
 
   const aiPicks = [
     {
-      id: '68cec39fa4dae9e7c23ef553', // Madhubani Painting
+      id: '68cfdcc1fe3c34d61b7f85ea', // Madhubani Painting
       name: 'Madhubani Painting Set',
       reason: 'Perfect for art lovers based on your browsing',
       confidence: 95,
@@ -102,7 +102,7 @@ export default function ExplorePage() {
       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBwYWludGluZ3MlMjB0cmFkaXRpb25hbHxlbnwxfHx8fDE3NTgzNjYyMTB8MA&ixlib=rb-4.1.0&q=80&w=400'
     },
     {
-      id: '68cec39fa4dae9e7c23ef555', // Brass Decorative Lamp
+      id: '68cfdcc1fe3c34d61b7f85ec', // Brass Decorative Lamp
       name: 'Brass Decorative Bowl',
       reason: 'Trending in your location',
       confidence: 88,
