@@ -302,7 +302,10 @@ app.get('/api/products/search', async (req, res) => {
         products: products || [],
         total: products?.length || 0,
         page: parseInt(page),
-        limit: parseInt(limit)
+        limit: parseInt(limit),
+        filters: {
+          categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+        }
       });
     }
 
@@ -319,6 +322,12 @@ app.get('/api/products/search', async (req, res) => {
         stock: 3,
         tags: ['silk', 'handwoven', 'traditional'],
         artisan_name: 'Priya Sharma',
+        artisan: {
+          id: 'artisan-1',
+          name: 'Priya Sharma',
+          location: 'Varanasi, Uttar Pradesh',
+          craft: 'Textile Weaving'
+        },
         rating: 4.9,
         review_count: 234
       }
@@ -368,7 +377,10 @@ app.get('/products/search', async (req, res) => {
         products: products || [],
         total: products?.length || 0,
         page: parseInt(page),
-        limit: parseInt(limit)
+        limit: parseInt(limit),
+        filters: {
+          categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+        }
       });
     }
 
@@ -385,6 +397,12 @@ app.get('/products/search', async (req, res) => {
         stock: 3,
         tags: ['silk', 'handwoven', 'traditional'],
         artisan_name: 'Priya Sharma',
+        artisan: {
+          id: 'artisan-1',
+          name: 'Priya Sharma',
+          location: 'Varanasi, Uttar Pradesh',
+          craft: 'Textile Weaving'
+        },
         rating: 4.9,
         review_count: 234
       }
@@ -420,7 +438,10 @@ app.get('/products/all', async (req, res) => {
       
       return res.json({
         products: products || [],
-        total: products?.length || 0
+        total: products?.length || 0,
+        filters: {
+          categories: ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone']
+        }
       });
     }
 
@@ -437,6 +458,12 @@ app.get('/products/all', async (req, res) => {
         stock: 3,
         tags: ['silk', 'handwoven', 'traditional'],
         artisan_name: 'Priya Sharma',
+        artisan: {
+          id: 'artisan-1',
+          name: 'Priya Sharma',
+          location: 'Varanasi, Uttar Pradesh',
+          craft: 'Textile Weaving'
+        },
         rating: 4.9,
         review_count: 234
       }
@@ -490,6 +517,12 @@ app.get('/products/one', async (req, res) => {
       stock: 3,
       tags: ['silk', 'handwoven', 'traditional'],
       artisan_name: 'Priya Sharma',
+      artisan: {
+        id: 'artisan-1',
+        name: 'Priya Sharma',
+        location: 'Varanasi, Uttar Pradesh',
+        craft: 'Textile Weaving'
+      },
       rating: 4.9,
       review_count: 234
     };
@@ -889,6 +922,21 @@ app.get('/orders/myorders', verifyToken, async (req, res) => {
   } catch (error) {
     console.error('Orders error:', error);
     res.status(500).json({ message: 'Error fetching my orders' });
+  }
+});
+
+// Categories API route
+app.get('/products/categories/all', async (req, res) => {
+  try {
+    console.log('Categories request received');
+    
+    const categories = ['Textiles', 'Pottery', 'Jewelry', 'Woodwork', 'Metalwork', 'Leather', 'Bamboo', 'Stone'];
+    
+    res.json(categories);
+
+  } catch (error) {
+    console.error('Categories error:', error);
+    res.status(500).json({ message: 'Error fetching categories' });
   }
 });
 
