@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import { Badge } from '../ui/badge'
@@ -20,6 +20,21 @@ import { useRouter } from '../router'
 import NavigationHeader from '../navigation-header'
 import Footer from '../footer'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { apiCall } from '../../utils/api'
+
+interface Artisan {
+  id: string
+  name: string
+  craft: string
+  location: string
+  experience: number
+  rating: number
+  review_count: number
+  products_count: number
+  is_verified: boolean
+  bio: string
+  created_at: string
+}
 
 export default function ArtisansPage() {
   const { navigate } = useRouter()
@@ -27,84 +42,33 @@ export default function ArtisansPage() {
   const [selectedLocation, setSelectedLocation] = useState('all')
   const [selectedCraft, setSelectedCraft] = useState('all')
   const [sortBy, setSortBy] = useState('rating')
+  const [artisans, setArtisans] = useState<Artisan[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const artisans = [
-    {
-      id: '1',
-      name: 'Priya Sharma',
-      craft: 'Textile Weaving',
-      location: 'Varanasi, Uttar Pradesh',
-      experience: 15,
-      rating: 4.9,
-      reviewCount: 234,
-      productsCount: 45,
-      isVerified: true,
-      isOnline: true,
-      specialties: ['Banarasi Silk', 'Traditional Weaving', 'Custom Designs'],
-      joinedDate: '2019',
-      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB3b21hbiUyMGFydGlzYW58ZW58MXx8fHwxNzU4MzY2MjE2fDA&ixlib=rb-4.1.0&q=80&w=400',
-      portfolio: [
-        'https://images.unsplash.com/photo-1632726733402-4a059a476028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB0ZXh0aWxlcyUyMHdlYXZpbmclMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMnww&ixlib=rb-4.1.0&q=80&w=200'
-      ]
-    },
-    {
-      id: '2',
-      name: 'Rajesh Kumar',
-      craft: 'Blue Pottery',
-      location: 'Jaipur, Rajasthan',
-      experience: 22,
-      rating: 4.7,
-      reviewCount: 189,
-      productsCount: 38,
-      isVerified: true,
-      isOnline: false,
-      specialties: ['Blue Pottery', 'Ceramic Art', 'Traditional Designs'],
-      joinedDate: '2018',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBtYW4lMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIxN3ww&ixlib=rb-4.1.0&q=80&w=400',
-      portfolio: [
-        'https://images.unsplash.com/photo-1716876995651-1ff85b65a6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBoYW5kaWNyYWZ0cyUyMHBvdHRlcnklMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMHww&ixlib=rb-4.1.0&q=80&w=200'
-      ]
-    },
-    {
-      id: '3',
-      name: 'Meera Patel',
-      craft: 'Silver Jewelry',
-      location: 'Cuttack, Odisha',
-      experience: 18,
-      rating: 4.8,
-      reviewCount: 312,
-      productsCount: 67,
-      isVerified: true,
-      isOnline: true,
-      specialties: ['Silver Filigree', 'Traditional Jewelry', 'Custom Pieces'],
-      joinedDate: '2020',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b2bd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB3b21hbiUyMGFydGlzYW4lMjBqZXdlbHJ5fGVufDF8fHx8MTc1ODM2NjIxOHww&ixlib=rb-4.1.0&q=80&w=400',
-      portfolio: [
-        'https://images.unsplash.com/photo-1653227907864-560dce4c252d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBqZXdlbHJ5JTIwbWFraW5nJTIwY3JhZnRzfGVufDF8fHx8MTc1ODM2NjIwNXww&ixlib=rb-4.1.0&q=80&w=200'
-      ]
-    },
-    {
-      id: '4',
-      name: 'Arjun Singh',
-      craft: 'Wood Carving',
-      location: 'Saharanpur, Uttar Pradesh',
-      experience: 25,
-      rating: 4.6,
-      reviewCount: 156,
-      productsCount: 29,
-      isVerified: true,
-      isOnline: false,
-      specialties: ['Wood Carving', 'Furniture', 'Decorative Items'],
-      joinedDate: '2017',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBtYW4lMjBhcnRpc2FuJTIwd29vZCUyMGNhcnZpbmd8ZW58MXx8fHwxNzU4MzY2MjE5fDA&ixlib=rb-4.1.0&q=80&w=400',
-      portfolio: [
-        'https://images.unsplash.com/photo-1595126035905-21b5c2b67c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kd29ya2luZyUyMGluZGlhbiUyMGFydGlzYW58ZW58MXx8fHwxNzU4MzY2MjA3fDA&ixlib=rb-4.1.0&q=80&w=200'
-      ]
+  // Load artisans from API
+  useEffect(() => {
+    loadArtisans()
+  }, [])
+
+  const loadArtisans = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await apiCall('/artisans')
+      setArtisans(response.data.artisans || [])
+    } catch (error) {
+      console.error('Error loading artisans:', error)
+      setError('Failed to load artisans')
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
-  const locations = ['All Locations', 'Rajasthan', 'Uttar Pradesh', 'Odisha', 'Gujarat', 'Maharashtra']
-  const crafts = ['All Crafts', 'Textile Weaving', 'Pottery', 'Jewelry', 'Wood Carving', 'Metalwork', 'Paintings']
+  // Get unique locations and crafts from artisans data
+  const locations = ['All Locations', ...new Set(artisans.map(a => a.location.split(',')[1]?.trim()).filter(Boolean))]
+  const crafts = ['All Crafts', ...new Set(artisans.map(a => a.craft).filter(Boolean))]
 
   const filteredArtisans = artisans.filter(artisan => {
     const matchesSearch = artisan.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -246,14 +210,11 @@ export default function ArtisansPage() {
                 <div className="flex items-start space-x-4 mb-4">
                   <div className="relative">
                     <ImageWithFallback
-                      src={artisan.avatar}
+                      src={`https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB3b21hbiUyMGFydGlzYW58ZW58MXx8fHwxNzU4MzY2MjE2fDA&ixlib=rb-4.1.0&q=80&w=400`}
                       alt={artisan.name}
                       className="w-16 h-16 rounded-full object-cover"
                     />
-                    {artisan.isOnline && (
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
-                    )}
-                    {artisan.isVerified && (
+                    {artisan.is_verified && (
                       <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground p-1 rounded-full">
                         <Award className="h-3 w-3" />
                       </div>
@@ -277,7 +238,7 @@ export default function ArtisansPage() {
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                     <span className="text-sm font-medium">{artisan.rating}</span>
                     <span className="text-xs text-muted-foreground ml-1">
-                      ({artisan.reviewCount})
+                      ({artisan.review_count})
                     </span>
                   </div>
                   <Badge variant="secondary" className="text-xs bg-secondary/60">
@@ -285,35 +246,18 @@ export default function ArtisansPage() {
                   </Badge>
                 </div>
 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {artisan.specialties.slice(0, 2).map((specialty) => (
-                    <Badge key={specialty} variant="outline" className="text-xs border-primary/20">
-                      {specialty}
-                    </Badge>
-                  ))}
-                  {artisan.specialties.length > 2 && (
-                    <Badge variant="outline" className="text-xs border-primary/20">
-                      +{artisan.specialties.length - 2}
-                    </Badge>
-                  )}
-                </div>
-
                 <div className="flex items-center text-xs text-muted-foreground mb-4">
                   <Users className="h-3 w-3 mr-1" />
-                  <span>{artisan.productsCount} products</span>
+                  <span>{artisan.products_count} products</span>
                   <span className="mx-2">•</span>
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Since {artisan.joinedDate}</span>
+                  <span>Since {new Date(artisan.created_at).getFullYear()}</span>
                 </div>
 
-                {artisan.portfolio.length > 0 && (
-                  <div className="mb-4">
-                    <ImageWithFallback
-                      src={artisan.portfolio[0]}
-                      alt="Portfolio sample"
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                  </div>
+                {artisan.bio && (
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {artisan.bio}
+                  </p>
                 )}
 
                 <div className="flex gap-2">

@@ -1242,6 +1242,96 @@ app.get('/api/analytics/inventory-insights', authenticateToken, async (req, res)
 
 // ===== ARTISAN ROUTES =====
 
+// Get all artisans
+app.get('/api/artisans', async (req, res) => {
+  try {
+    const { limit = 50, offset = 0, craft, location } = req.query;
+
+    if (supabase) {
+      let query = supabase
+        .from('users')
+        .select(`
+          id,
+          name,
+          craft,
+          location,
+          experience,
+          rating,
+          review_count,
+          products_count,
+          is_verified,
+          bio,
+          created_at
+        `)
+        .eq('role', 'artisan')
+        .order('rating', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      // Add filters if provided
+      if (craft && craft !== 'all') {
+        query = query.ilike('craft', `%${craft}%`);
+      }
+      
+      if (location && location !== 'all') {
+        query = query.ilike('location', `%${location}%`);
+      }
+
+      const { data: artisans, error } = await query;
+
+      if (error) throw error;
+
+      res.json({ artisans: artisans || [] });
+    } else {
+      // Fallback artisans data
+      const fallbackArtisans = [
+        {
+          id: '9caead92-24e3-457d-8d94-073c54e36cd2',
+          name: 'Priya Sharma',
+          craft: 'Textile Weaving',
+          location: 'Varanasi, Uttar Pradesh',
+          experience: 15,
+          rating: 4.9,
+          review_count: 234,
+          products_count: 3,
+          is_verified: true,
+          bio: 'Master weaver specializing in Banarasi silk sarees with 15 years of experience.',
+          created_at: '2025-01-21T00:00:00Z'
+        },
+        {
+          id: 'e3521dc9-43d7-45d9-8757-6c92e1ad4952',
+          name: 'Vikram Singh',
+          craft: 'Wood Carving',
+          location: 'Kolkata, West Bengal',
+          experience: 12,
+          rating: 4.7,
+          review_count: 178,
+          products_count: 2,
+          is_verified: true,
+          bio: 'Master wood carver with expertise in traditional Bengali woodwork and bamboo crafts.',
+          created_at: '2025-01-21T00:00:00Z'
+        },
+        {
+          id: '0fdce3a7-bc73-4492-a9d2-be38df10409c',
+          name: 'Rajesh Kumar',
+          craft: 'Pottery',
+          location: 'Jaipur, Rajasthan',
+          experience: 20,
+          rating: 4.8,
+          review_count: 189,
+          products_count: 2,
+          is_verified: true,
+          bio: 'Traditional potter specializing in blue pottery and ceramic art.',
+          created_at: '2025-01-21T00:00:00Z'
+        }
+      ];
+      res.json({ artisans: fallbackArtisans });
+    }
+  } catch (error) {
+    console.error('Get artisans error:', error);
+    res.status(500).json({ message: 'Failed to fetch artisans', error: error.message });
+  }
+});
+
 // Get artisan profile
 app.get('/api/artisans/:artisan_id', async (req, res) => {
   try {
