@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import { Badge } from '../ui/badge'
@@ -18,52 +18,63 @@ import { useFavorites } from '../favorites/favorites-context'
 import NavigationHeader from '../navigation-header'
 import Footer from '../footer'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { searchApi } from '../../utils/api'
 
 export default function ExplorePage() {
   const { navigate } = useRouter()
   const { isFavorited, toggleFavorite, favorites, loading: favoritesLoading } = useFavorites()
   const [favoriteLoading, setFavoriteLoading] = useState<string | null>(null)
+  const [trendingProducts, setTrendingProducts] = useState<any[]>([])
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([])
+  const [newArrivals, setNewArrivals] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const trendingProducts = [
-    {
-      id: '68cfdcc1fe3c34d61b7f85dc', // Handwoven Banarasi Silk Saree
-      name: 'Handwoven Banarasi Silk Saree',
-      price: 2500,
-      originalPrice: 3200,
-      rating: 4.8,
-      reviews: 124,
-      artisan: 'Priya Sharma',
-      location: 'Varanasi, UP',
-      image: 'https://images.unsplash.com/photo-1632726733402-4a059a476028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB0ZXh0aWxlcyUyMHdlYXZpbmclMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMnww&ixlib=rb-4.1.0&q=80&w=400',
-      aiEnhanced: true,
-      trending: true
-    },
-    {
-      id: '68cfdcc1fe3c34d61b7f85e2', // Blue Pottery Dinner Set
-      name: 'Blue Pottery Dinner Set',
-      price: 1800,
-      rating: 4.6,
-      reviews: 89,
-      artisan: 'Rajesh Kumar',
-      location: 'Jaipur, Rajasthan',
-      image: 'https://images.unsplash.com/photo-1716876995651-1ff85b65a6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBoYW5kaWNyYWZ0cyUyMHBvdHRlcnklMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMHww&ixlib=rb-4.1.0&q=80&w=400',
-      aiEnhanced: true,
-      trending: false
-    },
-    {
-      id: '68cfdcc1fe3c34d61b7f85e4', // Silver Filigree Earrings
-      name: 'Silver Filigree Earrings',
-      price: 750,
-      originalPrice: 950,
-      rating: 4.9,
-      reviews: 156,
-      artisan: 'Meera Patel',
-      location: 'Cuttack, Odisha',
-      image: 'https://images.unsplash.com/photo-1653227907864-560dce4c252d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBqZXdlbHJ5JTIwbWFraW5nJTIwY3JhZnRzfGVufDF8fHx8MTc1ODM2NjIwNXww&ixlib=rb-4.1.0&q=80&w=400',
-      aiEnhanced: false,
-      trending: true
+  // Load real products from backend
+  useEffect(() => {
+    loadProducts()
+  }, [])
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true)
+      
+      // Load trending products (products with trending flag or high ratings)
+      const trendingResponse = await searchApi.searchProducts({ 
+        trending: true, 
+        limit: 6,
+        sortBy: 'rating',
+        sortOrder: 'desc'
+      })
+      
+      // Load featured products (products with featured flag)
+      const featuredResponse = await searchApi.searchProducts({ 
+        featured: true, 
+        limit: 6,
+        sortBy: 'rating',
+        sortOrder: 'desc'
+      })
+      
+      // Load new arrivals (recently created products)
+      const newArrivalsResponse = await searchApi.searchProducts({ 
+        limit: 6,
+        sortBy: 'created_at',
+        sortOrder: 'desc'
+      })
+      
+      setTrendingProducts(trendingResponse.data.products || [])
+      setFeaturedProducts(featuredResponse.data.products || [])
+      setNewArrivals(newArrivalsResponse.data.products || [])
+      
+    } catch (error) {
+      console.error('Error loading products:', error)
+      // Fallback to empty arrays if API fails
+      setTrendingProducts([])
+      setFeaturedProducts([])
+      setNewArrivals([])
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
   const collections = [
     {
@@ -94,20 +105,20 @@ export default function ExplorePage() {
 
   const aiPicks = [
     {
-      id: '68cfdcc1fe3c34d61b7f85ea', // Madhubani Painting
-      name: 'Madhubani Painting Set',
+      id: '815ae716-eb37-4c80-ac35-97a6e0548144', // Terracotta Plant Pot Set
+      name: 'Terracotta Plant Pot Set',
       reason: 'Perfect for art lovers based on your browsing',
       confidence: 95,
-      price: 1500,
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBwYWludGluZ3MlMjB0cmFkaXRpb25hbHxlbnwxfHx8fDE3NTgzNjYyMTB8MA&ixlib=rb-4.1.0&q=80&w=400'
+      price: 800,
+      image: 'https://images.unsplash.com/photo-1716876995651-1ff85b65a6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBoYW5kaWNyYWZ0cyUyMHBvdHRlcnklMjBhcnRpc2FufGVufDF8fHx8MTc1ODM2NjIwMHww&ixlib=rb-4.1.0&q=80&w=400'
     },
     {
-      id: '68cfdcc1fe3c34d61b7f85ec', // Brass Decorative Lamp
-      name: 'Brass Decorative Bowl',
+      id: '86b284dc-c072-44bc-b45a-a72c3ed7a750', // Traditional Brass Lamp
+      name: 'Traditional Brass Lamp',
       reason: 'Trending in your location',
       confidence: 88,
       price: 2200,
-      image: 'https://images.unsplash.com/photo-1607013251379-e6eecfffe234?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZXRhbHdvcmslMjBjcmFmdHMlMjBpbmRpYW58ZW58MXx8fHwxNzU4MzY2MjA5fDA&ixlib=rb-4.1.0&q=80&w=400'
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBicmFzcyUyMGxhbXB8ZW58MXx8fHwxNzU4MzY2MjE0fDA&ixlib=rb-4.1.0&q=80&w=400'
     }
   ]
 
@@ -158,7 +169,26 @@ export default function ExplorePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {trendingProducts.map((product, index) => (
+              {loading ? (
+                // Loading skeleton
+                Array.from({ length: 6 }).map((_, index) => (
+                  <Card key={index} className="border-0 bg-card/60 backdrop-blur-sm">
+                    <div className="relative overflow-hidden rounded-t-2xl">
+                      <div className="w-full h-56 bg-gray-200 animate-pulse" />
+                    </div>
+                    <CardContent className="p-6">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-3 bg-gray-200 rounded animate-pulse mb-3" />
+                      <div className="h-3 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="flex justify-between">
+                        <div className="h-4 bg-gray-200 rounded animate-pulse w-16" />
+                        <div className="h-8 bg-gray-200 rounded animate-pulse w-16" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : trendingProducts.length > 0 ? (
+                trendingProducts.map((product, index) => (
                 <Card 
                   key={product.id}
                   className="group cursor-pointer border-0 bg-card/60 backdrop-blur-sm card-shadow hover:card-shadow-lg transition-all duration-300 hover:scale-105"
@@ -166,7 +196,7 @@ export default function ExplorePage() {
                 >
                   <div className="relative overflow-hidden rounded-t-2xl">
                     <ImageWithFallback
-                      src={product.image}
+                      src={product.images?.[0] || 'https://images.unsplash.com/photo-1632726733402-4a059a476028?w=400'}
                       alt={product.name}
                       className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                     />
@@ -176,7 +206,7 @@ export default function ExplorePage() {
                           #1 Trending
                         </Badge>
                       )}
-                      {product.aiEnhanced && (
+                      {product.trending && (
                         <Badge className="bg-purple-500 text-white border-0 shadow-sm">
                           <Sparkles className="w-3 h-3 mr-1" />
                           AI Enhanced
@@ -225,23 +255,23 @@ export default function ExplorePage() {
                         ))}
                       </div>
                       <span className="text-sm text-muted-foreground ml-2">
-                        ({product.reviews})
+                        ({product.review_count || 0})
                       </span>
                     </div>
 
                     <div className="flex items-center text-sm text-muted-foreground mb-4">
-                      <span className="font-medium">{product.artisan}</span>
+                      <span className="font-medium">{product.artisan_name}</span>
                       <span className="mx-1">•</span>
                       <MapPin className="h-3 w-3 mr-1" />
-                      <span>{product.location}</span>
+                      <span>{product.artisan?.location || 'India'}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="font-bold text-primary">₹{product.price}</span>
-                        {product.originalPrice && (
+                        {product.original_price && (
                           <span className="text-sm text-muted-foreground line-through">
-                            ₹{product.originalPrice}
+                            ₹{product.original_price}
                           </span>
                         )}
                       </div>
@@ -251,7 +281,12 @@ export default function ExplorePage() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-muted-foreground">No trending products found</p>
+                </div>
+              )}
             </div>
           </TabsContent>
 
