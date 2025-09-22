@@ -60,8 +60,9 @@ export default function ProductCatalog() {
   const [favoriteLoading, setFavoriteLoading] = useState<string | null>(null)
   const [availableCategories, setAvailableCategories] = useState<string[]>([])
 
-  // Get category from router params
+  // Get category and artisan from router params
   const categoryFromRoute = router.params.category
+  const artisanFromRoute = router.params.artisan
 
   useEffect(() => {
     loadProducts()
@@ -71,18 +72,22 @@ export default function ProductCatalog() {
   // Update selected category when route changes
   useEffect(() => {
     console.log('🔍 Category from route:', categoryFromRoute)
+    console.log('🔍 Artisan from route:', artisanFromRoute)
     if (categoryFromRoute) {
       setSelectedCategory(categoryFromRoute)
       loadProducts(categoryFromRoute)
+    } else if (artisanFromRoute) {
+      // If viewing artisan's products, load all products and filter by artisan
+      loadProducts(undefined, artisanFromRoute)
     }
-  }, [categoryFromRoute])
+  }, [categoryFromRoute, artisanFromRoute])
 
-  const loadProducts = async (category?: string) => {
+  const loadProducts = async (category?: string, artisanId?: string) => {
     try {
       setLoading(true)
       setError(null)
       
-      console.log('🔄 Loading products for category:', category)
+      console.log('🔄 Loading products for category:', category, 'artisan:', artisanId)
       
       const searchParams: any = {
         page: 1,
@@ -94,6 +99,12 @@ export default function ProductCatalog() {
       if (category && category !== 'all') {
         searchParams.category = category
         console.log('📂 Added category filter:', category)
+      }
+      
+      // Add artisan filter if specified
+      if (artisanId) {
+        searchParams.artisan_id = artisanId
+        console.log('👨‍🎨 Added artisan filter:', artisanId)
       }
       
       // Add search query if specified
@@ -148,22 +159,22 @@ export default function ProductCatalog() {
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
-    loadProducts(category === 'All Categories' ? 'all' : category)
+    loadProducts(category === 'All Categories' ? 'all' : category, artisanFromRoute)
   }
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query)
-    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory, artisanFromRoute)
   }
 
   const handlePriceRangeChange = (range: number[]) => {
     setPriceRange(range)
-    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory, artisanFromRoute)
   }
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort)
-    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory)
+    loadProducts(selectedCategory === 'all' ? undefined : selectedCategory, artisanFromRoute)
   }
 
   return (
@@ -196,6 +207,20 @@ export default function ProductCatalog() {
           </div>
         </div>
       </div>
+
+      {/* Artisan Products Header */}
+      {artisanFromRoute && (
+        <div className="bg-gradient-to-r from-primary/5 to-accent/5 border-b">
+          <div className="container mx-auto px-4 py-6">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-2">Artisan's Collection</h1>
+              <p className="text-muted-foreground">
+                Discover the beautiful handcrafted products by this talented artisan
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
