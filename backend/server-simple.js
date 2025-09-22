@@ -1,16 +1,21 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/products');
+const orderRoutes = require('./routes/orders');
+const profileRoutes = require('./routes/profile');
+const analyticsRoutes = require('./routes/analytics');
+const reviewRoutes = require('./routes/reviews');
+const favoriteRoutes = require('./routes/favorites');
+const artisanRoutes = require('./routes/artisans');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-
-// Trust proxy for Vercel (CRITICAL FIX)
-app.set('trust proxy', true);
 
 // Security middleware
 app.use(helmet());
@@ -18,8 +23,11 @@ app.use(helmet());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000,
-  message: 'Too many requests, please try again later.',
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: {
+    success: false,
+    message: 'Too many requests, please try again later.'
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -27,7 +35,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'null'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -38,144 +46,84 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '7d' });
-};
-
-// Simple auth routes for testing
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    const { mobile, password } = req.body;
-    
-    if (!mobile || !password) {
-      return res.status(400).json({ message: 'Mobile and password are required' });
-    }
-
-    // For now, return a simple success response
-    // TODO: Implement actual Supabase authentication
-    const token = generateToken('test-user-id');
-    
-    res.json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: 'test-user-id',
-        name: 'Test User',
-        mobile: mobile,
-        role: 'customer',
-        email: 'test@example.com',
-        location: 'Mumbai',
-        craft: '',
-        isVerified: true
-      }
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
-  }
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shilpkaarai')
+.then(() => {
+  console.log('✅ Connected to MongoDB');
+})
+.catch((error) => {
+  console.error('❌ MongoDB connection error:', error);
+  process.exit(1);
 });
 
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    const { name, mobile, password, role } = req.body;
-    
-    if (!name || !mobile || !password || !role) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // For now, return a simple success response
-    // TODO: Implement actual Supabase registration
-    const token = generateToken('new-user-id');
-    
-    res.status(201).json({
-      message: 'User registered successfully',
-      token,
-      user: {
-        id: 'new-user-id',
-        name: name,
-        mobile: mobile,
-        role: role,
-        email: '',
-        location: '',
-        craft: '',
-        isVerified: false
-      }
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
-  }
-});
-
-app.get('/api/auth/me', async (req, res) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
-    }
-
-    // For now, return a simple user response
-    // TODO: Implement actual token verification
-    res.json({
-      user: {
-        id: 'test-user-id',
-        name: 'Test User',
-        mobile: '9876543213',
-        role: 'customer',
-        email: 'test@example.com',
-        location: 'Mumbai',
-        craft: '',
-        isVerified: true
-      }
-    });
-
-  } catch (error) {
-    console.error('Get user error:', error);
-    res.status(401).json({ message: 'Token is not valid' });
-  }
-});
-
-app.post('/api/auth/logout', (req, res) => {
-  res.json({ message: 'Logout successful' });
-});
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/favorites', favoriteRoutes);
+app.use('/api/artisans', artisanRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
+    success: true,
     status: 'OK', 
     message: 'ShilpkaarAI API is running',
     timestamp: new Date().toISOString(),
-    database: 'Supabase PostgreSQL',
-    frontend_url: process.env.FRONTEND_URL || 'not set'
+    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+    environment: process.env.NODE_ENV || 'development',
+    version: '2.0.0'
+  });
+});
+
+// API documentation endpoint
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'ShilpkaarAI API Documentation',
+    version: '2.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      products: '/api/products',
+      orders: '/api/orders',
+      profile: '/api/profile',
+      analytics: '/api/analytics',
+      reviews: '/api/reviews',
+      favorites: '/api/favorites',
+      artisans: '/api/artisans'
+    }
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error(err.stack);
   res.status(500).json({ 
-    message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+    success: false,
+    message: 'Something went wrong!',
+    error: process.env.NODE_ENV === 'development' ? err.message : {}
   });
 });
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+  res.status(404).json({ 
+    success: false,
+    message: 'Route not found',
+    path: req.originalUrl
+  });
 });
 
-// Start server
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📊 Database: Supabase PostgreSQL`);
-    console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log('🚀 Server started successfully!');
+  console.log(`📡 Port: ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+  console.log(`❤️ Health Check: http://localhost:${PORT}/api/health`);
+});
 
-// Export for Vercel
 module.exports = app;

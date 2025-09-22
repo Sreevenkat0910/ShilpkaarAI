@@ -130,7 +130,7 @@ export default function EditProduct() {
         
         // Fetch product data from API
         const response = await apiCall(`/products/one?id=${productId}`)
-        const product = response.data.productData
+        const product = response.data.product
         
         // Set product data
         setProductData({

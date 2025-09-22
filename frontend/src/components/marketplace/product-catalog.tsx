@@ -29,21 +29,21 @@ interface Product {
   name: string
   description: string
   price: number
-  original_price?: number
+  originalPrice?: number
   rating: number
-  review_count: number
+  reviewCount: number
   artisan: {
     id: string
     name: string
     location: string
     craft: string
   }
-  artisan_name: string
+  artisanName: string
   category: string
   images: string[]
   tags: string[]
   stock: number
-  created_at: string
+  createdAt: string
 }
 
 export default function ProductCatalog() {
@@ -122,9 +122,9 @@ export default function ProductCatalog() {
       const response = await searchApi.searchProducts(searchParams)
       console.log('📦 API response:', response.data)
       
-      if (response && response.data && response.data.products) {
-        console.log('✅ Products loaded:', response.data.products.length)
-        setProducts(response.data.products)
+      if (response && response.data && response.data.data && response.data.data.products) {
+        console.log('✅ Products loaded:', response.data.data.products.length)
+        setProducts(response.data.data.products)
       } else {
         console.warn('❌ Products not found in API response')
         setProducts([])
@@ -140,8 +140,8 @@ export default function ProductCatalog() {
   const loadCategories = async () => {
     try {
       const response = await searchApi.getCategories()
-      if (response && response.data) {
-        setAvailableCategories(response.data)
+      if (response && response.data && response.data.data) {
+        setAvailableCategories(response.data.data)
       } else {
         console.warn('Categories not found in API response')
         setAvailableCategories([])
@@ -423,11 +423,11 @@ export default function ProductCatalog() {
                               ))}
                             </div>
                             <span className="text-xs text-muted-foreground ml-1">
-                              ({product.review_count})
+                              ({product.reviewCount})
                             </span>
                           </div>
                           <div className="flex items-center text-xs text-muted-foreground mb-3">
-                            <span className="font-medium">{product.artisan_name}</span>
+                            <span className="font-medium">{product.artisanName}</span>
                             <Badge variant="secondary" className="ml-1 text-xs">
                               ✓
                             </Badge>
@@ -438,9 +438,9 @@ export default function ProductCatalog() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <span className="font-bold text-primary">₹{product.price}</span>
-                              {product.original_price && (
+                              {product.originalPrice && (
                                 <span className="text-sm text-muted-foreground line-through">
-                                  ₹{product.original_price}
+                                  ₹{product.originalPrice}
                                 </span>
                               )}
                             </div>
@@ -480,9 +480,9 @@ export default function ProductCatalog() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <span className="font-bold text-primary">₹{product.price}</span>
-                              {product.original_price && (
+                              {product.originalPrice && (
                                 <span className="text-sm text-muted-foreground line-through">
-                                  ₹{product.original_price}
+                                  ₹{product.originalPrice}
                                 </span>
                               )}
                             </div>

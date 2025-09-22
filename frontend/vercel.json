@@ -5,6 +5,6 @@
   "installCommand": "npm install",
   "devCommand": "npm run dev",
   "env": {
-    "VITE_API_URL": "https://shilpkaarbackend-ai.vercel.app/api"
+    "VITE_API_URL": "https://your-backend-app.vercel.app/api"
   }
 }

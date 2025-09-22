@@ -6,7 +6,7 @@ export interface Product {
   name: string
   description: string
   price: number
-  original_price?: number
+  originalPrice?: number
   images: string[]
   category: string
   subcategory?: string
@@ -19,7 +19,7 @@ export interface Product {
     experience?: number
     rating?: number
   }
-  artisan_name: string
+  artisanName: string
   stock: number
   is_active: boolean
   tags?: string[]
@@ -38,9 +38,9 @@ export interface Product {
   featured?: boolean
   trending?: boolean
   rating?: number
-  review_count?: number
-  created_at: string
-  updated_at: string
+  reviewCount?: number
+  createdAt: string
+  updatedAt: string
 }
 
 export interface SearchFilters {

@@ -101,7 +101,7 @@ export default function ProductCatalog() {
   }
 
   const renderProductCard = (product: Product) => (
-    <Card key={product._id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card/60 backdrop-blur-sm card-shadow">
+    <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card/60 backdrop-blur-sm card-shadow">
       <CardContent className="p-0">
         <div className="relative">
           <div className="aspect-square overflow-hidden rounded-t-lg">
@@ -117,13 +117,13 @@ export default function ProductCatalog() {
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white rounded-full shadow-sm"
-            onClick={() => handleFavoriteToggle(product._id)}
-            disabled={favoriteLoading === product._id}
+            onClick={() => handleFavoriteToggle(product.id)}
+            disabled={favoriteLoading === product.id}
           >
-            {favoriteLoading === product._id ? (
+            {favoriteLoading === product.id ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Heart className={`h-4 w-4 ${isFavorited(product._id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+              <Heart className={`h-4 w-4 ${isFavorited(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
             )}
           </Button>
 
@@ -212,7 +212,7 @@ export default function ProductCatalog() {
   )
 
   const renderListView = (product: Product) => (
-    <Card key={product._id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card/60 backdrop-blur-sm card-shadow">
+    <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card/60 backdrop-blur-sm card-shadow">
       <CardContent className="p-4">
         <div className="flex gap-4">
           <div className="relative w-24 h-24 flex-shrink-0">
@@ -225,13 +225,13 @@ export default function ProductCatalog() {
               variant="ghost"
               size="sm"
               className="absolute top-1 right-1 h-6 w-6 p-0 bg-white/80 hover:bg-white rounded-full"
-              onClick={() => handleFavoriteToggle(product._id)}
-              disabled={favoriteLoading === product._id}
+              onClick={() => handleFavoriteToggle(product.id)}
+              disabled={favoriteLoading === product.id}
             >
-              {favoriteLoading === product._id ? (
+              {favoriteLoading === product.id ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <Heart className={`h-3 w-3 ${isFavorited(product._id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                <Heart className={`h-3 w-3 ${isFavorited(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
               )}
             </Button>
           </div>

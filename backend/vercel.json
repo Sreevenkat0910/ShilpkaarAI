@@ -1,15 +1,24 @@
 {
   "version": 2,
+  "name": "shilpkaarai-backend",
   "builds": [
     {
-      "src": "server-complete-supabase.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server-complete-supabase.js"
+      "dest": "server.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "server.js": {
+      "maxDuration": 30
+    }
+  }
 }

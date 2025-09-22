@@ -35,7 +35,7 @@ import ReviewsSection from './reviews-section'
 import { apiCall, ApiError } from '../../utils/api'
 
 interface Product {
-  _id: string
+  id: string
   name: string
   description: string
   price: number
@@ -43,7 +43,7 @@ interface Product {
   images: string[]
   category: string
   artisan: {
-    _id: string
+    id: string
     name: string
     location: string
     craft: string
@@ -92,8 +92,9 @@ export default function ProductDetail() {
       }
 
       const response = await apiCall(`/products/one?id=${router.params.id}`)
-      setProduct(response.data.productData)
+      setProduct(response.data.product)
     } catch (error) {
+      console.error('Error loading product:', error)
       if (error instanceof ApiError) {
         setError(error.message)
       } else {
@@ -108,7 +109,7 @@ export default function ProductDetail() {
     if (!product) return
     
     addToCart({
-      id: product._id,
+      id: product.id,
       name: product.name,
       price: product.price,
       image: product.images[0],
@@ -196,12 +197,12 @@ export default function ProductDetail() {
                     variant="ghost"
                     size="icon"
                     className={`absolute top-4 right-4 bg-white/90 hover:bg-white ${
-                      isFavorited(product._id) ? 'text-red-500' : 'text-muted-foreground'
+                      isFavorited(product.id) ? 'text-red-500' : 'text-muted-foreground'
                     }`}
                     onClick={async () => {
                       try {
                         setFavoriteLoading(true)
-                        await toggleFavorite(product._id)
+                        await toggleFavorite(product.id)
                       } catch (error) {
                         console.error('Error toggling favorite:', error)
                       } finally {

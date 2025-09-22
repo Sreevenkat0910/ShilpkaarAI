@@ -57,13 +57,13 @@ export default function ExplorePage() {
       // Load new arrivals (recently created products)
       const newArrivalsResponse = await searchApi.searchProducts({ 
         limit: 6,
-        sortBy: 'created_at',
+        sortBy: 'newest',
         sortOrder: 'desc'
       })
       
-      setTrendingProducts(trendingResponse.data.products || [])
-      setFeaturedProducts(featuredResponse.data.products || [])
-      setNewArrivals(newArrivalsResponse.data.products || [])
+      setTrendingProducts(trendingResponse.data.data.products || [])
+      setFeaturedProducts(featuredResponse.data.data.products || [])
+      setNewArrivals(newArrivalsResponse.data.data.products || [])
       
     } catch (error) {
       console.error('Error loading products:', error)
@@ -255,12 +255,12 @@ export default function ExplorePage() {
                         ))}
                       </div>
                       <span className="text-sm text-muted-foreground ml-2">
-                        ({product.review_count || 0})
+                        ({product.reviewCount || 0})
                       </span>
                     </div>
 
                     <div className="flex items-center text-sm text-muted-foreground mb-4">
-                      <span className="font-medium">{product.artisan_name}</span>
+                      <span className="font-medium">{product.artisanName}</span>
                       <span className="mx-1">•</span>
                       <MapPin className="h-3 w-3 mr-1" />
                       <span>{product.artisan?.location || 'India'}</span>
@@ -269,9 +269,9 @@ export default function ExplorePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="font-bold text-primary">₹{product.price}</span>
-                        {product.original_price && (
+                        {product.originalPrice && (
                           <span className="text-sm text-muted-foreground line-through">
-                            ₹{product.original_price}
+                            ₹{product.originalPrice}
                           </span>
                         )}
                       </div>

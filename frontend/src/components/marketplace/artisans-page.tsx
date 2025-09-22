@@ -238,7 +238,7 @@ export default function ArtisansPage() {
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                     <span className="text-sm font-medium">{artisan.rating}</span>
                     <span className="text-xs text-muted-foreground ml-1">
-                      ({artisan.review_count})
+                      ({artisan.reviewCount})
                     </span>
                   </div>
                   <Badge variant="secondary" className="text-xs bg-secondary/60">
@@ -251,7 +251,7 @@ export default function ArtisansPage() {
                   <span>{artisan.products_count} products</span>
                   <span className="mx-2">•</span>
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Since {new Date(artisan.created_at).getFullYear()}</span>
+                  <span>Since {new Date(artisan.createdAt).getFullYear()}</span>
                 </div>
 
                 {artisan.bio && (

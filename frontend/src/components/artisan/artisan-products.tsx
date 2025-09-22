@@ -472,9 +472,9 @@ export default function ArtisanProducts() {
                                   <span className="text-lg font-semibold text-primary">
                                     ₹{product.price.toLocaleString()}
                                   </span>
-                                  {product.original_price && product.original_price > product.price && (
+                                  {product.originalPrice && product.originalPrice > product.price && (
                                     <span className="text-sm text-muted-foreground line-through">
-                                      ₹{product.original_price.toLocaleString()}
+                                      ₹{product.originalPrice.toLocaleString()}
                                     </span>
                                   )}
                                 </div>
@@ -507,7 +507,7 @@ export default function ArtisanProducts() {
                                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                                 <span className="text-sm font-medium">{product.rating || 0}</span>
                                 <span className="text-xs text-muted-foreground ml-1">
-                                  ({product.review_count || 0})
+                                  ({product.reviewCount || 0})
                                 </span>
                               </div>
                               <div className="flex space-x-1">

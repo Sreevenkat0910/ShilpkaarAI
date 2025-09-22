@@ -1,16 +1,19 @@
 {
   "name": "shilpkaarai-backend",
-  "version": "1.0.0",
-  "description": "Backend API for ShilpkaarAI marketplace",
+  "version": "3.0.0",
+  "description": "Unified Supabase Backend API for ShilpkaarAI marketplace - Fully Functional & Optimized",
   "main": "server.js",
   "scripts": {
-    "start": "node server-supabase.js",
-    "dev": "nodemon server-supabase.js",
-    "dev-mongo": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "dev-mongo": "nodemon server-mongo.js",
+    "test": "./test-functionality.sh",
+    "recreate-db": "./recreate-supabase-db.sh",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.4",
+    "@supabase/supabase-js": "^2.38.0",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -20,18 +23,36 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "eslint": "^8.0.0"
   },
   "keywords": [
     "artisan",
     "marketplace",
     "api",
-    "mongodb"
+    "supabase",
+    "postgresql",
+    "unified",
+    "optimized",
+    "jwt",
+    "authentication",
+    "e-commerce"
   ],
   "author": "ShilpkaarAI Team",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/shilpkaarai-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/shilpkaarai-backend/issues"
+  },
+  "homepage": "https://github.com/your-username/shilpkaarai-backend#readme"
 }
